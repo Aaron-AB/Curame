@@ -2,13 +2,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.curameapplication">
 
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.CurameApplication">
+        android:theme="@style/Theme.CurameApplication"
+        android:largeHeap="true"
+        android:hardwareAccelerated="false">
         <activity android:name=".ImageSelectActivity"></activity>
         <activity android:name=".CameraActivity" />
         <activity android:name=".MainActivity">
@@ -22,6 +27,18 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-    </application>
+        
+        <provider
+            android:authorities="com.example.curameapplication.fileprovider"
+            android:name="androidx.core.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
 
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_path"/>
+
+        </provider>
+
+    </application>
 </manifest>

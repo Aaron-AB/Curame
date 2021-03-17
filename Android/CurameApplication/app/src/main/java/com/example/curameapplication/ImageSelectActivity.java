@@ -18,7 +18,7 @@ public class ImageSelectActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_select);
 
-        scanImage = (ImageView)findViewById(R.id.scanImage);
+        scanImage = (ImageView)findViewById(R.id.imagePreview);
 
         //Get Image taken from camera
         //Bitmap bitmap = (Bitmap) getIntent().getParcelableExtra("IMAGE_DATA");

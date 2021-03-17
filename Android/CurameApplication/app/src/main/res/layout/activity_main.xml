@@ -78,6 +78,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:background="#61D0E4"
+            android:onClick="goToGallery"
             android:padding="10dp"
             android:scaleType="centerInside"
             app:srcCompat="@drawable/galary_button" />

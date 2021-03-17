@@ -15,7 +15,7 @@
         app:cardBackgroundColor="#FFFFFF">
 
         <ImageView
-            android:id="@+id/scanImage"
+            android:id="@+id/imagePreview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintEnd_toEndOf="parent"

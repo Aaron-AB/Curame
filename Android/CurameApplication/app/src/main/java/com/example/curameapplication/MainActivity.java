@@ -112,13 +112,20 @@ public class MainActivity extends AppCompatActivity {
 
     //This files names and create a file for an image taken
     private File createImageFile() throws IOException {
-        //Name the file SCAN_dd_MM_yyyy_HH_mm_ss
-        String fileName = "SCAN_"
+        //Name the directory SCAN_dd_MM_yyyy_HH_mm_ss
+        String dirName = "SCAN_"
                 + new SimpleDateFormat(
                         "dd_MM_yyyy_HH_mm_ss", Locale.getDefault()
         ).format(new Date());
 
-        File directory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        //Name the image IMG_dd_MM_yyyy_HH_mm_ss
+        String fileName = "IMG_"
+                + new SimpleDateFormat(
+                "dd_MM_yyyy_HH_mm_ss", Locale.getDefault()
+        ).format(new Date());
+
+        File directory = getExternalFilesDir(Environment.DIRECTORY_PICTURES + "/" + dirName);
+
         File image = File.createTempFile(
                 fileName,
                 ".jpg",

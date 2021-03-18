@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_CAPTURE = 2;
     private static final int REQUEST_CODE_PERMISSIONS_GALLERY = 3;
     private static final int REQUEST_CODE_IMAGE_PICK = 4;
+    private static final int REQUEST_CODE_IMAGE_PREVIEW = 5;
     private static final String PREFERENCES_NAME = "ImagePreferences";
     private static final String TAG = "Debug";
 
@@ -184,11 +186,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         startActivityForResult(intent, REQUEST_CODE_IMAGE_PICK);
-
-        /*
-            //CODE TO CREATE A NEW FILE FOR SELECT IMAGE
-        */
-
     }//callGalleryIntent
 
     @Override
@@ -250,9 +247,16 @@ public class MainActivity extends AppCompatActivity {
             }else if(resultCode == RESULT_CANCELED){
 
                 //Delete the temp file REMEMBER
-                Log.d(TAG, "After Activity: " + imagePref.getString("currentImagePath", "none found"));
-                deleteTempFiles(getExternalFilesDir(Environment.DIRECTORY_PICTURES));
+                //Log.d(TAG, "After Activity: " + imagePref.getString("currentImagePath", "none found"));
+                try {
+                    File file = new File(imagePref.getString("currentImagePath", "none found"));
+                    file.delete();
+                }catch (Exception exception){
+                    Log.d(TAG, exception.getMessage());
+                }
 
+                //CLean up any other files and directories
+                deleteTempFiles(getExternalFilesDir(Environment.DIRECTORY_PICTURES));
             }
         }
 
@@ -266,7 +270,7 @@ public class MainActivity extends AppCompatActivity {
                     //pass the image to the Image Selection activity
                     Intent intent = new Intent(getApplicationContext(), PreviewImageFromGallery.class);
                     intent.putExtra("IMAGE_DATA", imageUri);
-                    startActivity(intent);
+                    startActivityForResult(intent, REQUEST_CODE_IMAGE_PREVIEW);
 
                 } catch (Exception exception) {
                     Toast.makeText(this, exception.getMessage(), Toast.LENGTH_SHORT).show();
@@ -274,8 +278,48 @@ public class MainActivity extends AppCompatActivity {
                 }
             }else if(resultCode == RESULT_CANCELED){
 
-                //Delete the temp file REMEMBER
+            }
+        }
 
+        //After Image Preview Terminates
+        if(requestCode == REQUEST_CODE_IMAGE_PREVIEW){
+            if(resultCode == RESULT_OK){
+
+                try {
+                    //get the URI from the preview if the image is accepted
+                    Uri imageUri = (Uri) data.getParcelableExtra("IMAGE_URI");
+                    //Log.d("URI", imageUri.toString());
+
+                    //create a new image
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+
+                    File image = null;
+                    image = createImageFile();
+
+                    //save the image
+                    FileOutputStream outStream = new FileOutputStream(image);
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 85, outStream);
+                    outStream.close();
+
+                    //Save image path
+                    currentImagePath = image.getAbsolutePath();
+                    //Place image path in cache storage
+                    prefEditor.putString("currentImagePath", (String)image.getAbsolutePath());
+                    prefEditor.apply();
+
+                    //Start the activity to display the image
+                    Intent intent = new Intent(getApplicationContext(), ImageSelectActivity.class);
+                    intent.putExtra("IMAGE_DATA", imagePref.getString("currentImagePath", "none found"));
+                    startActivity(intent);
+                }
+
+                catch (IOException exception){
+                    Log.d(TAG, exception.getMessage());
+                }
+
+            }else if(resultCode == RESULT_CANCELED){
+                //Toast.makeText(this, "Canceled!", Toast.LENGTH_SHORT).show();
+                callGalleryIntent();
             }
         }
 

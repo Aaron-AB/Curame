@@ -243,6 +243,8 @@ public class MainActivity extends AppCompatActivity {
             }else if(resultCode == RESULT_CANCELED){
 
                 //Delete the temp file REMEMBER
+                Log.d(TAG, "After Activity: " + imagePref.getString("currentImagePath", "none found"));
+                deleteTempFiles(getExternalFilesDir(Environment.DIRECTORY_PICTURES));
 
             }
         }
@@ -272,4 +274,26 @@ public class MainActivity extends AppCompatActivity {
 
         super.onActivityResult(requestCode, resultCode, data);
     }//onActivityResult
+
+    private void deleteTempFiles(File file) {
+        int file_size;
+        if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            if (files != null) {
+                for (File f : files) {
+                    if (f.isDirectory()) {
+                        deleteTempFiles(f);
+                        if(f.list().length == 0){
+                            f.delete();
+                        }
+                    } else {
+                        file_size = Integer.parseInt(String.valueOf(f.length()/1024));
+                        if(file_size == 0){
+                            f.delete();
+                        }
+                    }
+                }
+            }
+        }
+    }//deleteTempFiles
 }

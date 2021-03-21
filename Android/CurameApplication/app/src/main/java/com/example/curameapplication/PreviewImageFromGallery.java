@@ -11,6 +11,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import java.io.IOException;
+import java.util.List;
+
+import static org.tensorflow.lite.support.common.FileUtil.loadMappedFile;
+
 public class PreviewImageFromGallery extends AppCompatActivity {
 
     private ImageView imagePreview;
@@ -29,6 +34,37 @@ public class PreviewImageFromGallery extends AppCompatActivity {
         //Set Image
         imagePreview.setImageURI(null);
         imagePreview.setImageURI(imageUri);
+
+
+        /**
+        try {
+            this.classifyImage();
+        } catch (Exception e) {
+            Log.d("debug", "onCreate: " + e.getMessage());
+        }
+         **/
+        String imageFilePath = "/sdcard/Download/ISIC_0024898.jpg";
+        Log.d("IMAGE URI", "OVER HERE " + imageFilePath);
+
+        ImageClassifier classifier = new ImageClassifier(this, imageFilePath);
+        String values = classifier.Classify();
+        //List<String> probabilities = classifier.Classify();
+
+        Log.d("debug", "classifyImage: " + values);
+
+
+    }
+
+    private void classifyImage() {
+        //String imageFilePath = imageUri.getPath();
+        String imageFilePath = "/sdcard/Download/ISIC_0024898.jpg";
+        Log.d("IMAGE URI", "OVER HERE " + imageFilePath);
+
+        ImageClassifier classifier = new ImageClassifier(this, imageFilePath);
+
+        //List<String> probabilities = classifier.Classify();
+
+        //Log.d("debug", "classifyImage: " + probabilities);
 
     }
 

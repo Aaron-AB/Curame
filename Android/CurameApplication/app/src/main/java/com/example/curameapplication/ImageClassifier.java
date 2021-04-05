@@ -142,7 +142,7 @@ public class ImageClassifier {
     }
 
     //public List<String> Classify() {
-    public String Classify() {
+    public Map<String, Float> Classify() {
         TensorImage tensorImage = ImagePreprocessor(imageBitmap);
 
         model.run(tensorImage.getBuffer(), outputBuffer.getBuffer());
@@ -151,11 +151,6 @@ public class ImageClassifier {
         TensorLabel outputProb = new TensorLabel(labels, fpProbabilityConv.process(outputBuffer));
 
         Map<String, Float> floatMap = outputProb.getMapWithFloatValue();
-        return floatMap.toString();
+        return floatMap;
     }
-
-
-
-
-
 }

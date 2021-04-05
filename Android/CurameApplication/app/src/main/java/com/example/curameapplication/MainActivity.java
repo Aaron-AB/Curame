@@ -349,4 +349,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }//deleteTempFiles
 
+    public void goToSelector(View view) {
+        Intent intent = new Intent(getApplicationContext(), DiagnosisSelectActivity.class);
+        startActivity(intent);
+    }
 }

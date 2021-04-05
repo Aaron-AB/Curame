@@ -13,6 +13,7 @@ import android.widget.ImageView;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import static org.tensorflow.lite.support.common.FileUtil.loadMappedFile;
 
@@ -35,26 +36,20 @@ public class PreviewImageFromGallery extends AppCompatActivity {
         imagePreview.setImageURI(null);
         imagePreview.setImageURI(imageUri);
 
-
-        /**
-        try {
-            this.classifyImage();
-        } catch (Exception e) {
-            Log.d("debug", "onCreate: " + e.getMessage());
-        }
-         **/
-        String imageFilePath = "/sdcard/Download/ISIC_0024898.jpg";
+        String imageFilePath = "/sdcard/Android/data/com.example.curameapplication/files/Pictures/SCAN_18_03_2021_01_16_25/ISIC_0034114.jpg";
         Log.d("IMAGE URI", "OVER HERE " + imageFilePath);
 
+        //Set the image to be classified
         ImageClassifier classifier = new ImageClassifier(this, imageFilePath);
-        String values = classifier.Classify();
-        //List<String> probabilities = classifier.Classify();
 
-        Log.d("debug", "classifyImage: " + values);
+        //Get the values from the classification
+        Map<String, Float> valueMap = classifier.Classify();
+        String values = valueMap.toString();
 
-
+        Log.d("CLASSIFICATION", "classifyImage: " + values);
     }
 
+    /*
     private void classifyImage() {
         //String imageFilePath = imageUri.getPath();
         String imageFilePath = "/sdcard/Download/ISIC_0024898.jpg";
@@ -65,8 +60,7 @@ public class PreviewImageFromGallery extends AppCompatActivity {
         //List<String> probabilities = classifier.Classify();
 
         //Log.d("debug", "classifyImage: " + probabilities);
-
-    }
+    }*/
 
     public void cancelImage(View view) {
         Intent returnIntent = new Intent();

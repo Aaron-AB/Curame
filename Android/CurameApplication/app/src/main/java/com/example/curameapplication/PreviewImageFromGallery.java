@@ -36,6 +36,7 @@ public class PreviewImageFromGallery extends AppCompatActivity {
         imagePreview.setImageURI(null);
         imagePreview.setImageURI(imageUri);
 
+        /*
         String imageFilePath = "/sdcard/Android/data/com.example.curameapplication/files/Pictures/SCAN_18_03_2021_01_16_25/ISIC_0034114.jpg";
         Log.d("IMAGE URI", "OVER HERE " + imageFilePath);
 
@@ -47,6 +48,7 @@ public class PreviewImageFromGallery extends AppCompatActivity {
         String values = valueMap.toString();
 
         Log.d("CLASSIFICATION", "classifyImage: " + values);
+        */
     }
 
     /*

@@ -45,7 +45,6 @@ public class DiagnosisAdapter extends RecyclerView.Adapter<DiagnosisAdapter.Diag
     public class DiagnosisViewHolder extends RecyclerView.ViewHolder{
 
         TextView itemName, itemValue;
-        
 
         public DiagnosisViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -25,12 +25,16 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -122,18 +126,20 @@ public class MainActivity extends AppCompatActivity {
         ).format(new Date());
 
         //Name the image IMG_dd_MM_yyyy_HH_mm_ss
-        String fileName = "IMG_"
-                + new SimpleDateFormat(
-                "dd_MM_yyyy_HH_mm_ss", Locale.getDefault()
-        ).format(new Date());
+        //Name the image scan
+        String fileName = "scan";
 
         File directory = getExternalFilesDir(Environment.DIRECTORY_PICTURES + "/" + dirName);
 
+        File image = new File(directory, "scan.jpg");
+
+        /*
         File image = File.createTempFile(
                 fileName,
                 ".jpg",
                 directory
         );
+        */
 
         //currentImagePath = image.getAbsolutePath();
         return image;
@@ -246,7 +252,6 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, exception.getMessage());
                 }
             }else if(resultCode == RESULT_CANCELED){
-
                 //Delete the temp file REMEMBER
                 //Log.d(TAG, "After Activity: " + imagePref.getString("currentImagePath", "none found"));
                 try {
@@ -302,6 +307,14 @@ public class MainActivity extends AppCompatActivity {
                     bitmap.compress(Bitmap.CompressFormat.PNG, 85, outStream);
                     outStream.close();
 
+                    //save the date and prediction in the same location as the image
+                    //Test Data
+                    Map<String, Float> valueMap = new HashMap<String, Float>();
+                    valueMap.put("Name1", new Float(0.30));
+                    valueMap.put("Name2", new Float(0.35));
+                    valueMap.put("Name3", new Float(0.40));
+                    valueMap.put("Name4", new Float(0.45));
+                    savePredictionInfo(valueMap, image.getParent());
                     //Save image path
                     currentImagePath = image.getAbsolutePath();
                     //Place image path in cache storage
@@ -339,7 +352,8 @@ public class MainActivity extends AppCompatActivity {
                             f.delete();
                         }
                     } else {
-                        file_size = Integer.parseInt(String.valueOf(f.length()/1024));
+                        //file_size = Integer.parseInt(String.valueOf(f.length()/1024));
+                        file_size = Integer.parseInt(String.valueOf(f.length()));
                         if(file_size == 0){
                             f.delete();
                         }
@@ -348,6 +362,23 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }//deleteTempFiles
+
+    private void savePredictionInfo(Map<String, Float> valueMap, String directory){
+        Prediction prediction = new Prediction(valueMap);
+
+        // write object to file
+        try {
+            //name the file data.ser
+            FileOutputStream fos = new FileOutputStream(directory + "/data.ser");
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(prediction);
+            oos.close();
+        } catch (FileNotFoundException e) {
+            Log.d(TAG, e.getMessage());
+        } catch (IOException e) {
+            Log.d(TAG, e.getMessage());
+        }
+    }
 
     public void goToSelector(View view) {
         Intent intent = new Intent(getApplicationContext(), DiagnosisSelectActivity.class);

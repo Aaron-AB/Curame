@@ -10,6 +10,7 @@ public class DiagnosisSelectActivity extends AppCompatActivity {
 
     RecyclerView diagnosisRecycler;
 
+    //Test Data
     String names[] = {"Name1", "Name2", "Name3", "Name4"};
     Float values[] = {new Float(0.30), new Float(0.45), new Float(0.42), new Float(0.40)};
 

@@ -10,9 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class DiagnosisAdapter extends RecyclerView.Adapter<DiagnosisAdapter.DiagnosisViewHolder> {
-    String names[];
-    Float values[];
-    Context context;
+    private String names[];
+    private Float values[];
+    private Context context;
 
     public DiagnosisAdapter(Context context, String names[], Float values[]){
         this.context = context;

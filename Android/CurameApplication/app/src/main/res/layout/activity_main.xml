@@ -103,6 +103,7 @@
             android:layout_width="100dp"
             android:layout_height="50dp"
             android:background="@null"
+            android:onClick="goToHistory"
             android:padding="10dp"
             android:scaleType="centerInside"
             app:srcCompat="@drawable/hist_button" />

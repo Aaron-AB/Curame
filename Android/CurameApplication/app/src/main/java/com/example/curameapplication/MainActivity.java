@@ -37,7 +37,6 @@ import java.util.Locale;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
-
     private static final int REQUEST_CODE_PERMISSIONS_CAMERA = 1;
     private static final int REQUEST_CODE_CAPTURE = 2;
     private static final int REQUEST_CODE_PERMISSIONS_GALLERY = 3;
@@ -380,8 +379,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //TEST FUNCTION to go to selector screen
     public void goToSelector(View view) {
         Intent intent = new Intent(getApplicationContext(), DiagnosisSelectActivity.class);
+        startActivity(intent);
+    }
+
+    //Function to go to the Scan History Screen
+    public void goToHistory(View view) {
+        Intent intent = new Intent(getApplicationContext(), HistoryActivity.class);
         startActivity(intent);
     }
 }

@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 
 public class DiagnosisSelectActivity extends AppCompatActivity {
-
     RecyclerView diagnosisRecycler;
 
     //Test Data

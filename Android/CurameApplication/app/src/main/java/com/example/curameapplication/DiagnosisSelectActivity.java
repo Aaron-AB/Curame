@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.View;
 
 public class DiagnosisSelectActivity extends AppCompatActivity {
     RecyclerView diagnosisRecycler;
@@ -25,5 +26,9 @@ public class DiagnosisSelectActivity extends AppCompatActivity {
         DiagnosisAdapter adapter = new DiagnosisAdapter(this, names, values);
         diagnosisRecycler.setAdapter(adapter);
         diagnosisRecycler.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    public void finishActivity(View view) {
+        finish();
     }
 }

@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "Debug";
 
     private ImageButton scanButton;
-    private String currentImagePath;
     private int count = 0;
 
     //Shared preferences
@@ -140,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
         );
         */
 
-        //currentImagePath = image.getAbsolutePath();
+
         return image;
     };
 
@@ -169,7 +168,6 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
 
                 //Save image path
-                currentImagePath = image.getAbsolutePath();
                 //imagePref.edit().putString("currentImagePath", image.getAbsolutePath());
                 prefEditor.putString("currentImagePath", (String)image.getAbsolutePath());
                 prefEditor.apply();
@@ -219,47 +217,24 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        /*
-        if (requestCode == 1) {
-
-            if(resultCode == Activity.RESULT_OK){
-                Bitmap bitmap = (Bitmap) data.getParcelableExtra("IMAGE_DATA");
-
-                //pass the image to the Image Selection activity
-                Intent intent = new Intent(getApplicationContext(), ImageSelectActivity.class);
-                intent.putExtra("IMAGE_DATA", bitmap);
-                startActivity(intent);
-            }
-            if (resultCode == Activity.RESULT_CANCELED) {
-                //no result
-            }
-
-        }*/
-
         //After Camera Activity Terminates
         if(requestCode == REQUEST_CODE_CAPTURE){
             if(resultCode == RESULT_OK){
                 try {
-                    //Start the activity to display the image
-                    Intent intent = new Intent(getApplicationContext(), ImageSelectActivity.class);
-                    intent.putExtra("IMAGE_DATA", imagePref.getString("currentImagePath", "none found"));
-                    startActivity(intent);
-
-                    //Log.d(TAG, "After Activity: " + imagePref.getString("currentImagePath", "none found"));
+                    //Start the classification process for images taken from camera
+                    startClassification(imagePref.getString("currentImagePath", "none found"));
                 } catch (Exception exception) {
                     Toast.makeText(this, exception.getMessage(), Toast.LENGTH_SHORT).show();
                     Log.d(TAG, exception.getMessage());
                 }
             }else if(resultCode == RESULT_CANCELED){
-                //Delete the temp file REMEMBER
-                //Log.d(TAG, "After Activity: " + imagePref.getString("currentImagePath", "none found"));
+                //Delete the canceled file
                 try {
                     File file = new File(imagePref.getString("currentImagePath", "none found"));
                     file.delete();
                 }catch (Exception exception){
                     Log.d(TAG, exception.getMessage());
                 }
-
                 //CLean up any other files and directories
                 deleteTempFiles(getExternalFilesDir(Environment.DIRECTORY_PICTURES));
             }
@@ -269,15 +244,15 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode == REQUEST_CODE_IMAGE_PICK){
             if(resultCode == RESULT_OK){
                 try {
-
                     //Toast.makeText(this, "Image Selected!", Toast.LENGTH_SHORT).show();
                     Uri imageUri = (Uri) data.getData();
-                    //pass the image to the Image Selection activity
+
+                    //Ask the user to preview the selected image
                     Intent intent = new Intent(getApplicationContext(), PreviewImageFromGallery.class);
                     intent.putExtra("IMAGE_DATA", imageUri);
                     startActivityForResult(intent, REQUEST_CODE_IMAGE_PREVIEW);
 
-                } catch (Exception exception) {
+                }catch (Exception exception) {
                     Toast.makeText(this, exception.getMessage(), Toast.LENGTH_SHORT).show();
                     Log.d(TAG, exception.getMessage());
                 }
@@ -288,8 +263,7 @@ public class MainActivity extends AppCompatActivity {
 
         //After Image Preview Terminates
         if(requestCode == REQUEST_CODE_IMAGE_PREVIEW){
-            if(resultCode == RESULT_OK){
-
+            if(resultCode == RESULT_OK){//The user accepts the selected image
                 try {
                     //get the URI from the preview if the image is accepted
                     Uri imageUri = (Uri) data.getParcelableExtra("IMAGE_URI");
@@ -314,28 +288,22 @@ public class MainActivity extends AppCompatActivity {
                     valueMap.put("Name3", new Float(0.40));
                     valueMap.put("Name4", new Float(0.45));
                     savePredictionInfo(valueMap, image.getParent());
-                    //Save image path
-                    currentImagePath = image.getAbsolutePath();
+
                     //Place image path in cache storage
                     prefEditor.putString("currentImagePath", (String)image.getAbsolutePath());
                     prefEditor.apply();
 
-                    //Start the activity to display the image
-                    Intent intent = new Intent(getApplicationContext(), ImageSelectActivity.class);
-                    intent.putExtra("IMAGE_DATA", imagePref.getString("currentImagePath", "none found"));
-                    startActivity(intent);
+                    //Start the classification process for images selected from gallery
+                    startClassification(imagePref.getString("currentImagePath", "none found"));
                 }
-
                 catch (IOException exception){
                     Log.d(TAG, exception.getMessage());
                 }
 
-            }else if(resultCode == RESULT_CANCELED){
-                //Toast.makeText(this, "Canceled!", Toast.LENGTH_SHORT).show();
+            }else if(resultCode == RESULT_CANCELED){//the user cancels the selected image
                 callGalleryIntent();
             }
         }
-
         super.onActivityResult(requestCode, resultCode, data);
     }//onActivityResult
 
@@ -361,6 +329,13 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }//deleteTempFiles
+
+    private void startClassification(String imagePath){
+        //Start the activity to display the image
+        Intent intent = new Intent(getApplicationContext(), ImageSelectActivity.class);
+        intent.putExtra("IMAGE_DATA", imagePath);
+        startActivity(intent);
+    }
 
     private void savePredictionInfo(Map<String, Float> valueMap, String directory){
         Prediction prediction = new Prediction(valueMap);

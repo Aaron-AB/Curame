@@ -48,4 +48,8 @@ public class CameraActivity extends AppCompatActivity {
     public void selectImage(View view) {
 
     }
+
+    public void finishActivity(View view) {
+        finish();
+    }
 }

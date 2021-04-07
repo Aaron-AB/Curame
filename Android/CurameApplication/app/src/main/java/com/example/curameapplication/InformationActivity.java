@@ -87,4 +87,8 @@ public class InformationActivity extends AppCompatActivity {
             mainScroll.fullScroll(View.FOCUS_UP);
         }});
     }
+
+    public void finishActivity(View view) {
+        finish();
+    }
 }

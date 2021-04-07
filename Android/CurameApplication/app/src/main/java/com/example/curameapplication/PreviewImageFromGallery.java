@@ -18,6 +18,7 @@ import java.util.Map;
 import static org.tensorflow.lite.support.common.FileUtil.loadMappedFile;
 
 public class PreviewImageFromGallery extends AppCompatActivity {
+    private static final int RESULT_CODE_EXIT = 2;
 
     private ImageView imagePreview;
     private Uri imageUri;
@@ -74,6 +75,12 @@ public class PreviewImageFromGallery extends AppCompatActivity {
         Intent returnIntent = new Intent();
         returnIntent.putExtra("IMAGE_URI", imageUri);
         setResult(Activity.RESULT_OK, returnIntent);
+        finish();
+    }
+
+    public void finishActivity(View view) {
+        Intent returnIntent = new Intent();
+        setResult(RESULT_CODE_EXIT, returnIntent);
         finish();
     }
 }

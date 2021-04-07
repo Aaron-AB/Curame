@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 
 public class ImageSelectActivity extends AppCompatActivity {
@@ -53,6 +54,10 @@ public class ImageSelectActivity extends AppCompatActivity {
         Bitmap bitmap = BitmapFactory.decodeFile(filePath, bitmapOptions);
 
         return bitmap;
+    }
+
+    public void finishActivity(View view) {
+        finish();
     }
 }
 

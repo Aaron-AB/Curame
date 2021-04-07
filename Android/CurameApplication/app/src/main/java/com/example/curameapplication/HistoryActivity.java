@@ -114,4 +114,8 @@ public class HistoryActivity extends AppCompatActivity {
         }//If the picture directory Exists
         return;
     }//loadScanHistory Function
+
+    public void finishActivity(View view) {
+        finish();
+    }
 }

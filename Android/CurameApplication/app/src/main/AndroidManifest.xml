@@ -15,7 +15,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CurameApplication">
-        <activity android:name=".HistoryActivity"></activity>
+        <activity android:name=".InformationActivity"></activity>
+        <activity android:name=".HistoryActivity" />
         <activity android:name=".DiagnosisSelectActivity" />
         <activity android:name=".PreviewImageFromGallery" />
         <activity android:name=".ImageSelectActivity" />

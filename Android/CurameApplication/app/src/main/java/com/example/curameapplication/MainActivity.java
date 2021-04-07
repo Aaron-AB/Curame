@@ -390,4 +390,10 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), HistoryActivity.class);
         startActivity(intent);
     }
+
+    //Function to go to the Information Screen
+    public void goToInfo(View view) {
+        Intent intent = new Intent(getApplicationContext(), InformationActivity.class);
+        startActivity(intent);
+    }
 }

@@ -331,18 +331,14 @@ public class MainActivity extends AppCompatActivity {
     }//deleteTempFiles
 
     private void startClassification(String imagePath){
-        //Start the activity to display the image
-        /*
-        Intent intent = new Intent(getApplicationContext(), ImageSelectActivity.class);
-        intent.putExtra("IMAGE_PATH", imagePath);
-        startActivity(intent);
-         */
-
         //Get the frame with the loading animation
         FrameLayout overlay = findViewById(R.id.overlayFrame);
         //Set the lading animation to visible
         overlay.setVisibility(View.VISIBLE);
         //create a thread that will handle classifying the image
+
+        Activity currentActivity = this;
+
         new Thread(new Runnable() {
 
             @Override
@@ -363,14 +359,21 @@ public class MainActivity extends AppCompatActivity {
                 String parentPath = imageFile.getParent();
 
                 //Classify the image
-                /* classification */
+                //Set the image to be classified
+                ImageClassifier classifier = new ImageClassifier(currentActivity, imagePath);
 
+                //Get the values from the classification
+                Map<String, Float> valueMap = classifier.Classify();
+                Log.d("CLASSIFICATION", valueMap.toString());
+
+                /*
                 //Test Data
                 Map<String, Float> valueMap = new HashMap<String, Float>();
                 valueMap.put("Name1", new Float(0.30));
                 valueMap.put("Name2", new Float(0.35));
                 valueMap.put("Name3", new Float(0.40));
                 valueMap.put("Name4", new Float(0.45));
+                */
 
                 //save the date and prediction in the same location as the image
                 savePredictionInfo(valueMap, parentPath);
@@ -385,7 +388,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }).start();
-
     }
 
     private void savePredictionInfo(Map<String, Float> valueMap, String directory){

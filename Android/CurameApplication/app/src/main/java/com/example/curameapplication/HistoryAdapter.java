@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -51,8 +52,10 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         //get the top 3 predictions from the hash map
         Map<String, Float> prediction = predictions.get(position).getPrediction();
         Set<String> keys = prediction.keySet();
+        //Set percentage
+        DecimalFormat df = new DecimalFormat("##.###");
         for(String key : keys){
-            result = result + key + ": " + Float.toString(prediction.get(key) * 100) + "%\n";
+            result = result + key + ": " + df.format(prediction.get(key) * 100) + "%\n";
         }
         //Display the result of the prediction
         holder.itemPrediction.setText(result);

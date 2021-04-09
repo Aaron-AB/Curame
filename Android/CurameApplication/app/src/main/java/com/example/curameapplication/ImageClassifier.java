@@ -25,6 +25,7 @@ import java.nio.MappedByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import static org.tensorflow.lite.support.common.FileUtil.loadMappedFile;
 
@@ -151,6 +152,7 @@ public class ImageClassifier {
         TensorLabel outputProb = new TensorLabel(labels, fpProbabilityConv.process(outputBuffer));
 
         Map<String, Float> floatMap = outputProb.getMapWithFloatValue();
+
         return floatMap;
     }
 }

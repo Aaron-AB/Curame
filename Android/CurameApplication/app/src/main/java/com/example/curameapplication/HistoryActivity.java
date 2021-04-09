@@ -16,6 +16,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Iterator;
 
 public class HistoryActivity extends AppCompatActivity {
@@ -72,6 +74,18 @@ public class HistoryActivity extends AppCompatActivity {
 
             //Check if the picture directory has no files
             if (files != null) {
+                //sort the array by most recent
+                Arrays.sort(files, new Comparator<File>() {
+                    @Override
+                    public int compare(File o1, File o2) {
+                        if (o1.lastModified() > o2.lastModified()){
+                            return -1;
+                        }else if (o1.lastModified() == o2.lastModified()){
+                            return 0;
+                        }
+                        return 1;
+                    }
+                });
                 //For each file in the picture directory
                 for (File f : files) {
                     //If that file is also a directory, i.e. is a scan history directory

@@ -20,6 +20,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -299,7 +300,6 @@ public class MainActivity extends AppCompatActivity {
                 catch (IOException exception){
                     Log.d(TAG, exception.getMessage());
                 }
-
             }else if(resultCode == RESULT_CANCELED){//the user cancels the selected image
                 callGalleryIntent();
             }
@@ -332,9 +332,60 @@ public class MainActivity extends AppCompatActivity {
 
     private void startClassification(String imagePath){
         //Start the activity to display the image
+        /*
         Intent intent = new Intent(getApplicationContext(), ImageSelectActivity.class);
-        intent.putExtra("IMAGE_DATA", imagePath);
+        intent.putExtra("IMAGE_PATH", imagePath);
         startActivity(intent);
+         */
+
+        //Get the frame with the loading animation
+        FrameLayout overlay = findViewById(R.id.overlayFrame);
+        //Set the lading animation to visible
+        overlay.setVisibility(View.VISIBLE);
+        //create a thread that will handle classifying the image
+        new Thread(new Runnable() {
+
+            @Override
+            public void run()
+            {
+                //TEST
+                //Give the system time to display the loading animation
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                //Get the image from the path specified
+                File imageFile = new File(imagePath);
+
+                //Get the parent folder of the image
+                String parentPath = imageFile.getParent();
+
+                //Classify the image
+                /* classification */
+
+                //Test Data
+                Map<String, Float> valueMap = new HashMap<String, Float>();
+                valueMap.put("Name1", new Float(0.30));
+                valueMap.put("Name2", new Float(0.35));
+                valueMap.put("Name3", new Float(0.40));
+                valueMap.put("Name4", new Float(0.45));
+
+                //save the date and prediction in the same location as the image
+                savePredictionInfo(valueMap, parentPath);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run()
+                    {
+                        overlay.setVisibility(View.GONE);
+                    }
+                });
+            }
+
+        }).start();
+
     }
 
     private void savePredictionInfo(Map<String, Float> valueMap, String directory){

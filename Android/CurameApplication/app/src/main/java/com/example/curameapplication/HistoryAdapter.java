@@ -1,12 +1,14 @@
 package com.example.curameapplication;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -49,7 +51,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         holder.itemImage.setImageURI(imageUris.get(position));
 
         String result = "";
-        //get the top 3 predictions from the hash map
+        //get the predictions from the hash map
         Map<String, Float> prediction = predictions.get(position).getPrediction();
         Set<String> keys = prediction.keySet();
         //Set percentage
@@ -59,6 +61,16 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         }
         //Display the result of the prediction
         holder.itemPrediction.setText(result);
+
+        //add onclick listener to view scan;
+        holder.viewScanButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, DiagnosisSelectActivity.class);
+                intent.putExtra("PREDICTION_DATA", (Prediction)predictions.get(position));
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -71,12 +83,14 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         ImageView itemImage;
         TextView itemDate;
         TextView itemPrediction;
+        LinearLayout viewScanButton;
 
         public HistoryViewHolder(@NonNull View itemView) {
             super(itemView);
             itemImage = itemView.findViewById(R.id.image);
             itemDate = itemView.findViewById(R.id.date);
             itemPrediction = itemView.findViewById(R.id.prediction);
+            viewScanButton = itemView.findViewById(R.id.viewScan);
         }
     }
 }

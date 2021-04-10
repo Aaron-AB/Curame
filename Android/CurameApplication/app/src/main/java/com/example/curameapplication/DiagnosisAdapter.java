@@ -9,12 +9,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+
 public class DiagnosisAdapter extends RecyclerView.Adapter<DiagnosisAdapter.DiagnosisViewHolder> {
-    private String names[];
-    private Float values[];
+    private ArrayList<String> names;
+    private ArrayList<Float> values;
     private Context context;
 
-    public DiagnosisAdapter(Context context, String names[], Float values[]){
+    public DiagnosisAdapter(Context context, ArrayList<String> names, ArrayList<Float> values){
         this.context = context;
         this.names = names;
         this.values = values;
@@ -32,14 +35,16 @@ public class DiagnosisAdapter extends RecyclerView.Adapter<DiagnosisAdapter.Diag
     @Override
     public void onBindViewHolder(@NonNull DiagnosisViewHolder holder, int position) {
         //This binds the items provided to the variables in the adapter
-        holder.itemName.setText(names[position]);
-        holder.itemValue.setText(values[position].toString());
+        holder.itemName.setText(names.get(position));
+        //Set Percentage
+        DecimalFormat df = new DecimalFormat("##.###");
+        holder.itemValue.setText(df.format(values.get(position) * 100) + "%");
     }
 
     @Override
     public int getItemCount() {
         //This tells the adapter how many items its displaying
-        return names.length;
+        return names.size();
     }
 
     public class DiagnosisViewHolder extends RecyclerView.ViewHolder{

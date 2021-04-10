@@ -4,20 +4,29 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 public class DiagnosisSelectActivity extends AppCompatActivity {
     RecyclerView diagnosisRecycler;
-
-    //Test Data
-    String names[] = {"Name1", "Name2", "Name3", "Name4"};
-    Float values[] = {new Float(0.30), new Float(0.45), new Float(0.42), new Float(0.40)};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_diagnosis_select);
+
+        //Get data from Intent
+        Prediction prediction = (Prediction)getIntent().getExtras().get("PREDICTION_DATA");
+        Map<String, Float> predictionData = prediction.getPrediction();
+
+        //Set the names and values of our prediction
+        ArrayList<String> names = new ArrayList<String>(predictionData.keySet());
+        ArrayList<Float> values = new ArrayList<Float>(predictionData.values());
 
         //Get the recycler for the view
         diagnosisRecycler = (RecyclerView)findViewById(R.id.diagnosisRecyler);

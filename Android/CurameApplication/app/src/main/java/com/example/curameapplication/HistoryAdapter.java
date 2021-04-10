@@ -68,6 +68,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
             public void onClick(View v) {
                 Intent intent = new Intent(context, DiagnosisSelectActivity.class);
                 intent.putExtra("PREDICTION_DATA", (Prediction)predictions.get(position));
+                intent.putExtra("SCAN_IMAGE", (Uri)imageUris.get(position));
                 context.startActivity(intent);
             }
         });

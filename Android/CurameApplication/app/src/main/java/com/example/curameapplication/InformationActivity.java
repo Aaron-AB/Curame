@@ -24,7 +24,6 @@ public class InformationActivity extends AppCompatActivity {
     private TextView percentage;
     private RecyclerView informationRecycler;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,12 +35,18 @@ public class InformationActivity extends AppCompatActivity {
         percentage = (TextView)findViewById(R.id.percentage);
 
         //**Test Data
+        /*
         String imagePath = "/sdcard/Android/data/com.example.curameapplication/files/Pictures/SCAN_05_04_2021_03_13_15/scan.jpg";
         String diseaseName = "Disease Name";
         Float diseasePercentage = new Float(0.35);
+         */
+
+        Uri imageUri = (Uri)getIntent().getExtras().get("SCAN_IMAGE");
+        String diseaseName = (String)getIntent().getStringExtra("NAME_DATA");
+        Float diseasePercentage = (Float)getIntent().getExtras().get("PERCENTAGE_DATA");
 
         //Set image
-        mainImage.setImageURI(Uri.fromFile(new File(imagePath)));
+        mainImage.setImageURI(imageUri);
 
         //Set disease title
         diseaseTitle.setText(diseaseName);

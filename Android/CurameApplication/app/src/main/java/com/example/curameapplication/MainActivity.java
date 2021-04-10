@@ -340,14 +340,13 @@ public class MainActivity extends AppCompatActivity {
         Activity currentActivity = this;
 
         new Thread(new Runnable() {
-
             @Override
             public void run()
             {
                 //TEST
                 //Give the system time to display the loading animation
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -366,31 +365,28 @@ public class MainActivity extends AppCompatActivity {
                 Map<String, Float> valueMap = classifier.Classify();
                 Log.d("CLASSIFICATION", valueMap.toString());
 
-                /*
-                //Test Data
-                Map<String, Float> valueMap = new HashMap<String, Float>();
-                valueMap.put("Name1", new Float(0.30));
-                valueMap.put("Name2", new Float(0.35));
-                valueMap.put("Name3", new Float(0.40));
-                valueMap.put("Name4", new Float(0.45));
-                */
-
                 //save the date and prediction in the same location as the image
-                savePredictionInfo(valueMap, parentPath);
+                Prediction prediction = savePredictionInfo(valueMap, parentPath);
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run()
                     {
+                        //Start the display information Activity with the prediction made
+                        Intent intent = new Intent(currentActivity, DiagnosisSelectActivity.class);
+                        intent.putExtra("PREDICTION_DATA", prediction);
+                        intent.putExtra("SCAN_IMAGE", Uri.parse(imagePath));
+                        currentActivity.startActivity(intent);
+                        //Turn off the processing screen
                         overlay.setVisibility(View.GONE);
                     }
                 });
             }
-
         }).start();
+
     }
 
-    private void savePredictionInfo(Map<String, Float> valueMap, String directory){
+    private Prediction savePredictionInfo(Map<String, Float> valueMap, String directory){
         Prediction prediction = new Prediction(valueMap);
 
         // write object to file
@@ -405,6 +401,9 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             Log.d(TAG, e.getMessage());
         }
+
+        //Return the prediction
+        return prediction;
     }
 
     //TEST FUNCTION to go to selector screen

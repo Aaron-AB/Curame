@@ -97,64 +97,48 @@
     </androidx.cardview.widget.CardView>
 
     <GridLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_margin="16dp"
         android:layout_weight="1"
+        android:columnCount="2"
         android:orientation="vertical"
-        android:rowCount="1"
-        android:columnCount="2">
+        android:rowCount="1">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cancelOption"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_columnWeight="1"
             android:layout_gravity="center"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/blue_rounded_button"
+            android:gravity="center|center_horizontal|left|center_vertical"
             android:onClick="cancelImage"
-            app:cardBackgroundColor="#38B4E7"
-            app:cardCornerRadius="30dp">
+            android:paddingLeft="36dp"
+            android:paddingTop="12dp"
+            android:paddingRight="36dp"
+            android:paddingBottom="12dp"
+            android:text="CANCEL"
+            android:textSize="20sp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center|center_horizontal|left|center_vertical"
-                android:paddingLeft="36dp"
-                android:paddingTop="12dp"
-                android:paddingRight="36dp"
-                android:paddingBottom="12dp"
-                android:text="CANCEL"
-                android:textSize="20sp">
+        </TextView>
 
-            </TextView>
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/selectOption"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_columnWeight="1"
-            app:cardBackgroundColor="#38B4E7"
-            app:cardCornerRadius="30dp">
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/blue_rounded_button"
+            android:gravity="center|center_horizontal|left|center_vertical"
+            android:onClick="selectImage"
+            android:paddingLeft="36dp"
+            android:paddingTop="12dp"
+            android:paddingRight="36dp"
+            android:paddingBottom="12dp"
+            android:text="SELECT"
+            android:textSize="20sp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center|center_horizontal|left|center_vertical"
-                android:onClick="selectImage"
-                android:paddingLeft="36dp"
-                android:paddingTop="12dp"
-                android:paddingRight="36dp"
-                android:paddingBottom="12dp"
-                android:text="SELECT"
-                android:textSize="20sp">
-
-            </TextView>
-
-        </androidx.cardview.widget.CardView>
+        </TextView>
 
     </GridLayout>
 

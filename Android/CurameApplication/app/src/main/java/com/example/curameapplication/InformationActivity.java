@@ -72,9 +72,9 @@ public class InformationActivity extends AppCompatActivity {
         content.add(item);
 
         item = new ArrayList<String>();
-        item.add("Symptom 1 - You may experience this symptom");
-        item.add("Symptom 2 - You may also experience this symptom");
-        item.add("Symptom 3 - This is another symptom");
+        item.add("Symptom 1: You may experience this symptom");
+        item.add("Symptom 2: You may also experience this symptom");
+        item.add("Symptom 3: This is another symptom");
         content.add(item);
 
         item = new ArrayList<String>();

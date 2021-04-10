@@ -63,7 +63,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         holder.itemPrediction.setText(result);
 
         //add onclick listener to view scan;
-        holder.viewScanButton.setOnClickListener(new View.OnClickListener() {
+        holder.historyItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, DiagnosisSelectActivity.class);
@@ -84,14 +84,14 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         ImageView itemImage;
         TextView itemDate;
         TextView itemPrediction;
-        LinearLayout viewScanButton;
+        View historyItem;
 
         public HistoryViewHolder(@NonNull View itemView) {
             super(itemView);
             itemImage = itemView.findViewById(R.id.image);
             itemDate = itemView.findViewById(R.id.date);
             itemPrediction = itemView.findViewById(R.id.prediction);
-            viewScanButton = itemView.findViewById(R.id.viewScan);
+            historyItem = itemView.findViewById(R.id.historyItem);
         }
     }
 }

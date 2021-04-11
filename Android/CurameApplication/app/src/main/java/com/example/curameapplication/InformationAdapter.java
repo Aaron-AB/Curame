@@ -22,13 +22,14 @@ public class InformationAdapter extends RecyclerView.Adapter<InformationAdapter.
     private Context context;
     private TextToSpeech textToSpeech;
 
-    public InformationAdapter(Context context, Disease disease){
+    public InformationAdapter(Context context, Disease disease, TextToSpeech tts){
         this.sectionTitle = new ArrayList<>();
         sectionTitle.add("Description");
         sectionTitle.add("Symptoms");
         sectionTitle.add("Treatment");
         this.sectionContent = disease.toArrayLists();
         this.context = context;
+        this.textToSpeech = tts;
     }
 
     @NonNull
@@ -63,16 +64,6 @@ public class InformationAdapter extends RecyclerView.Adapter<InformationAdapter.
         }
 
         //Click to read function
-        //Create a textToSpeech engine
-        textToSpeech = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if (status == TextToSpeech.SUCCESS){
-                    int lang = textToSpeech.setLanguage(Locale.ENGLISH);
-                }
-            }
-        });
-
         //Set the on click listener
         holder.informationItem.setOnClickListener(new View.OnClickListener() {
             @Override

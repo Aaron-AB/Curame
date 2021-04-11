@@ -20,8 +20,9 @@
         <activity android:name=".DiagnosisSelectActivity" />
         <activity android:name=".PreviewImageFromGallery" />
         <activity android:name=".ImageSelectActivity" />
-        <activity android:name=".CameraActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".CameraActivity"/>
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

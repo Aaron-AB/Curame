@@ -1,15 +1,17 @@
 package com.example.curameapplication;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -20,14 +22,15 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
+import java.util.Locale;
 
 public class InformationActivity extends AppCompatActivity {
 
@@ -35,13 +38,16 @@ public class InformationActivity extends AppCompatActivity {
     private TextView diseaseTitle;
     private TextView percentage;
     private RecyclerView informationRecycler;
-
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private TextToSpeech textToSpeech;
+    private FrameLayout imagePreview;
+    private ImageView fullImage;
+    private Uri imageUri;
 
     //Cloud Firestore instance
     public FirebaseFirestore db = FirebaseFirestore.getInstance();
     private Disease diseaseInfo;
     CollectionReference diseaseData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,20 +57,22 @@ public class InformationActivity extends AppCompatActivity {
         mainImage = (ImageView)findViewById(R.id.mainImage);
         diseaseTitle = (TextView)findViewById(R.id.diseaseTitle);
         percentage = (TextView)findViewById(R.id.percentage);
+        imagePreview = (FrameLayout)findViewById(R.id.imagePreview);
+        fullImage = (ImageView)findViewById(R.id.fullImage);
 
-        //**Test Data
-        /*
-        String imagePath = "/sdcard/Android/data/com.example.curameapplication/files/Pictures/SCAN_05_04_2021_03_13_15/scan.jpg";
-        String diseaseName = "Disease Name";
-        Float diseasePercentage = new Float(0.35);
-         */
-
-        Uri imageUri = (Uri)getIntent().getExtras().get("SCAN_IMAGE");
+        imageUri = (Uri)getIntent().getExtras().get("SCAN_IMAGE");
         String diseaseName = (String)getIntent().getStringExtra("NAME_DATA");
         Float diseasePercentage = (Float)getIntent().getExtras().get("PERCENTAGE_DATA");
 
-        //Set image
-        mainImage.setImageURI(imageUri);
+        //Set image using picasso
+        File imageFile = new File(imageUri.getPath());
+        Picasso
+                .get()
+                .load(imageFile)
+                .placeholder(R.drawable.empty)
+                .fit()
+                .centerInside()
+                .into(mainImage);
 
         //Set disease title
         diseaseTitle.setText(diseaseName);
@@ -75,6 +83,16 @@ public class InformationActivity extends AppCompatActivity {
 
         //Initialize recycler view
         informationRecycler = (RecyclerView)findViewById(R.id.informationRecycler);
+
+        //Initialize Text to speech
+        textToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS){
+                    int lang = textToSpeech.setLanguage(Locale.ENGLISH);
+                }
+            }
+        });
 
         //Fetch and display the disease information
         fetchDisease(diseaseName);
@@ -89,7 +107,7 @@ public class InformationActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                        Log.d("FETCH DEBUG", "DocumentSnapshot data: " + document.getData());
                         String name = document.getData().get("name").toString();
 
                         String description = document.getData().get("description").toString();
@@ -100,15 +118,14 @@ public class InformationActivity extends AppCompatActivity {
                         String treatment = document.getData().get("treatment").toString();
 
                         Disease disease = new Disease(name, description, symString, treatment);
-                        Log.d("HERE MESSAGE", disease.toString());
 
                         //Display the disease information
                         displayDiseaseInformation(disease);
                     } else {
-                        Log.d(TAG, "No Document by that name exists");
+                        Log.d("FETCH DEBUG", "No Document by that name exists");
                     }
                 } else {
-                    Log.d(TAG, "get failed with ", task.getException());
+                    Log.d("FETCH DEBUG", "get failed with ", task.getException());
                 }
             }
         });
@@ -116,7 +133,7 @@ public class InformationActivity extends AppCompatActivity {
 
     //This function accepts a disease and displays it to the information recyclers
     private void displayDiseaseInformation(Disease disease) {
-        InformationAdapter adapter = new InformationAdapter(this, disease);
+        InformationAdapter adapter = new InformationAdapter(this, disease, textToSpeech);
         informationRecycler.setAdapter(adapter);
         informationRecycler.setLayoutManager(new LinearLayoutManager(this));
 
@@ -128,5 +145,32 @@ public class InformationActivity extends AppCompatActivity {
 
     public void finishActivity(View view) {
         finish();
+    }
+
+    //Clear text to speech on destroy
+    @Override
+    protected void onDestroy() {
+        //Close the Text to Speech Library
+        if(textToSpeech != null) {
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+            Log.d("TTS CLEAR", "TTS Destroyed");
+        }
+        super.onDestroy();
+    }
+
+    public void showFull(View view) {
+        imagePreview.setVisibility(View.VISIBLE);
+        File imageFile = new File(imageUri.getPath());
+        Picasso
+                .get()
+                .load(imageFile)
+                .fit()
+                .centerInside()
+                .into(fullImage);
+    }
+
+    public void hideFull(View view) {
+        imagePreview.setVisibility(View.GONE);
     }
 }

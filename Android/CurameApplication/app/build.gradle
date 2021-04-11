@@ -55,4 +55,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation "pl.droidsonroids.gif:android-gif-drawable:1.2.18"
     implementation 'com.android.support:multidex:2.0.1'
+    implementation 'com.squareup.picasso:picasso:2.71828'
 }

@@ -4,18 +4,29 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class InformationActivity extends AppCompatActivity {
 
@@ -24,6 +35,12 @@ public class InformationActivity extends AppCompatActivity {
     private TextView percentage;
     private RecyclerView informationRecycler;
 
+    private static final String TAG = MainActivity.class.getSimpleName();
+
+    //Cloud Firestore instance
+    public FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private Disease diseaseInfo;
+    CollectionReference diseaseData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +99,21 @@ public class InformationActivity extends AppCompatActivity {
         content.add(item);
         //**End test data
 
+        //DATA FETCH FIREBASE
+
+        Log.d("FIREBASE", "THIS IS THE START OF FIREBASE FETCH");
+        fetchDisease(diseaseName, new Callback() {
+            @Override
+            public void onCallback(Disease disease) {
+                diseaseInfo = disease;
+                Log.d("CALLBACK WORKS", diseaseInfo.toString());
+                //Add Logic here
+            }
+        });
+
+
+        Log.d("FIREBASE", "THIS IS THE END OF FIREBASE FETCH");
+        //END DATA FETCH
         //Display the information Adapter to the screen
         InformationAdapter adapter = new InformationAdapter(this, titles, content);
         informationRecycler.setAdapter(adapter);
@@ -96,4 +128,37 @@ public class InformationActivity extends AppCompatActivity {
     public void finishActivity(View view) {
         finish();
     }
+
+    private void fetchDisease(String diseaseName, final Callback callback) {
+        final ArrayList<Disease> diseaseDescLoc = new ArrayList<>();
+        DocumentReference docRef = db.collection("Diseases").document(diseaseName);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                        String name = document.getData().get("name").toString();
+
+                        String description = document.getData().get("description").toString();
+
+                        Object symptoms = document.getData().get("symptom");
+                        ArrayList<String> symString = (ArrayList<String>) symptoms;
+
+                        String treatment = document.getData().get("treatment").toString();
+
+                        Disease disease = new Disease(name, description, symString, treatment);
+                        callback.onCallback(disease);
+                    } else {
+                        Log.d(TAG, "No Document by that name exists");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+
+    }
+
 }

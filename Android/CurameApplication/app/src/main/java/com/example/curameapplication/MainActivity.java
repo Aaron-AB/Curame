@@ -343,7 +343,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run()
             {
-                //TEST
                 //Give the system time to display the loading animation
                 try {
                     Thread.sleep(500);

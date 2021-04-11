@@ -22,9 +22,12 @@ public class InformationAdapter extends RecyclerView.Adapter<InformationAdapter.
     private Context context;
     private TextToSpeech textToSpeech;
 
-    public InformationAdapter(Context context, ArrayList<String> sectionTitle, ArrayList<ArrayList<String>> sectionContent){
-        this.sectionTitle = sectionTitle;
-        this.sectionContent = sectionContent;
+    public InformationAdapter(Context context, Disease disease){
+        this.sectionTitle = new ArrayList<>();
+        sectionTitle.add("Description");
+        sectionTitle.add("Symptoms");
+        sectionTitle.add("Treatment");
+        this.sectionContent = disease.toArrayLists();
         this.context = context;
     }
 

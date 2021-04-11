@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1060069172526",
+    "project_id": "curame-db7dc",
+    "storage_bucket": "curame-db7dc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1060069172526:android:a3d3d5112deaa02ced86bf",
+        "android_client_info": {
+          "package_name": "com.example.curameapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1060069172526-c2vk73pp611mr8ht0ubdq92bruaulffr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVjFOM7cO25Hnj2QsO0tWDMhUYkqR-3p0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1060069172526-c2vk73pp611mr8ht0ubdq92bruaulffr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

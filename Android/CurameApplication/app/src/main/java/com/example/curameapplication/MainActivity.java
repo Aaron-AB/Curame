@@ -383,7 +383,6 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         }).start();
-
     }
 
     private Prediction savePredictionInfo(Map<String, Float> valueMap, String directory){
@@ -406,21 +405,9 @@ public class MainActivity extends AppCompatActivity {
         return prediction;
     }
 
-    //TEST FUNCTION to go to selector screen
-    public void goToSelector(View view) {
-        Intent intent = new Intent(getApplicationContext(), DiagnosisSelectActivity.class);
-        startActivity(intent);
-    }
-
     //Function to go to the Scan History Screen
     public void goToHistory(View view) {
         Intent intent = new Intent(getApplicationContext(), HistoryActivity.class);
-        startActivity(intent);
-    }
-
-    //Function to go to the Information Screen
-    public void goToInfo(View view) {
-        Intent intent = new Intent(getApplicationContext(), InformationActivity.class);
         startActivity(intent);
     }
 }

@@ -42,11 +42,14 @@ public class InformationActivity extends AppCompatActivity {
     private FrameLayout imagePreview;
     private ImageView fullImage;
     private Uri imageUri;
+    private CollectionReference diseaseData;
+    private View informationContent;
+    private View loadingContent;
+    private TextView message;
 
     //Cloud Firestore instance
     public FirebaseFirestore db = FirebaseFirestore.getInstance();
     private Disease diseaseInfo;
-    CollectionReference diseaseData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +62,9 @@ public class InformationActivity extends AppCompatActivity {
         percentage = (TextView)findViewById(R.id.percentage);
         imagePreview = (FrameLayout)findViewById(R.id.imagePreview);
         fullImage = (ImageView)findViewById(R.id.fullImage);
+        informationContent = findViewById(R.id.informationContent);
+        loadingContent = findViewById(R.id.loadingContent);
+        message = findViewById(R.id.message);
 
         imageUri = (Uri)getIntent().getExtras().get("SCAN_IMAGE");
         String diseaseName = (String)getIntent().getStringExtra("NAME_DATA");
@@ -107,25 +113,30 @@ public class InformationActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
+                        //Create a disease object from the fetched information
                         Log.d("FETCH DEBUG", "DocumentSnapshot data: " + document.getData());
                         String name = document.getData().get("name").toString();
-
                         String description = document.getData().get("description").toString();
-
                         Object symptoms = document.getData().get("symptom");
                         ArrayList<String> symString = (ArrayList<String>) symptoms;
-
                         String treatment = document.getData().get("treatment").toString();
-
                         Disease disease = new Disease(name, description, symString, treatment);
 
                         //Display the disease information
                         displayDiseaseInformation(disease);
                     } else {
+                        //Display error message
                         Log.d("FETCH DEBUG", "No Document by that name exists");
+                        message.setVisibility(View.VISIBLE);
+                        loadingContent.setVisibility(View.GONE);
+                        message.setText("No information is available for this skin disease.");
                     }
                 } else {
+                    //Display error message
                     Log.d("FETCH DEBUG", "get failed with ", task.getException());
+                    message.setVisibility(View.VISIBLE);
+                    loadingContent.setVisibility(View.GONE);
+                    message.setText("Failed to get information from server.");
                 }
             }
         });
@@ -133,14 +144,14 @@ public class InformationActivity extends AppCompatActivity {
 
     //This function accepts a disease and displays it to the information recyclers
     private void displayDiseaseInformation(Disease disease) {
+        //Hide the loading symbol and show the information
+        loadingContent.setVisibility(View.GONE);
+        informationContent.setVisibility(View.VISIBLE);
+
+        //Show the information
         InformationAdapter adapter = new InformationAdapter(this, disease, textToSpeech);
         informationRecycler.setAdapter(adapter);
         informationRecycler.setLayoutManager(new LinearLayoutManager(this));
-
-        ScrollView mainScroll = findViewById(R.id.mainScroll);
-        mainScroll.post(new Runnable() {public void run() {
-            mainScroll.fullScroll(View.FOCUS_UP);
-        }});
     }
 
     public void finishActivity(View view) {
@@ -172,5 +183,13 @@ public class InformationActivity extends AppCompatActivity {
 
     public void hideFull(View view) {
         imagePreview.setVisibility(View.GONE);
+    }
+
+    //This function scrolls to top
+    public void goToTop(View view) {
+        ScrollView mainScroll = findViewById(R.id.mainScroll);
+        mainScroll.post(new Runnable() {public void run() {
+            mainScroll.fullScroll(View.FOCUS_UP);
+        }});
     }
 }

@@ -167,7 +167,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginBottom="8dp"
-            app:cardBackgroundColor="#1493CC"
+            app:cardBackgroundColor="@color/my_dark_blue"
             app:cardCornerRadius="23dp"
             app:layout_constraintBottom_toTopOf="@+id/cardView6"
             app:layout_constraintStart_toStartOf="parent">

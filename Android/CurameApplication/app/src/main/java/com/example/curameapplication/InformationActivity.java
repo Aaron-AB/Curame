@@ -27,7 +27,10 @@ import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Map;
+<<<<<<< HEAD
 import java.util.Set;
+=======
+>>>>>>> 04db1f0b84fae735f7d6d0de87484536649bb10f
 
 public class InformationActivity extends AppCompatActivity {
 
@@ -76,6 +79,7 @@ public class InformationActivity extends AppCompatActivity {
         //Initialize recycler view
         informationRecycler = (RecyclerView)findViewById(R.id.informationRecycler);
 
+<<<<<<< HEAD
         //Fetch and display the disease information
         fetchDisease(diseaseName);
     }
@@ -117,6 +121,48 @@ public class InformationActivity extends AppCompatActivity {
     //This function accepts a disease and displays it to the information recyclers
     private void displayDiseaseInformation(Disease disease) {
         InformationAdapter adapter = new InformationAdapter(this, disease);
+        //**Test Data
+        ArrayList<String> titles = new ArrayList<String>();
+        ArrayList<ArrayList<String>> content = new ArrayList<ArrayList<String>>();
+
+        titles.add("Description");
+        titles.add("Possible Symptoms");
+        titles.add("Treatments");
+
+        ArrayList<String> item;
+        item = new ArrayList<String>();
+        item.add("This is the section for the Description of the illness. Here you may write all about the illness");
+        content.add(item);
+
+        item = new ArrayList<String>();
+        item.add("Symptom 1: You may experience this symptom");
+        item.add("Symptom 2: You may also experience this symptom");
+        item.add("Symptom 3: This is another symptom");
+        content.add(item);
+
+        item = new ArrayList<String>();
+        item.add("Sorry. The Curame System does not have nay treatments for this illness available at the moment. Please contact a dermatologist for more information.");
+        content.add(item);
+        //**End test data
+
+        //DATA FETCH FIREBASE
+
+        Log.d("FIREBASE", "THIS IS THE START OF FIREBASE FETCH");
+        fetchDisease(diseaseName, new Callback() {
+            @Override
+            public void onCallback(Disease disease) {
+                diseaseInfo = disease;
+                Log.d("CALLBACK WORKS", diseaseInfo.toString());
+                //Add Logic here
+            }
+        });
+
+
+        Log.d("FIREBASE", "THIS IS THE END OF FIREBASE FETCH");
+        //END DATA FETCH
+        //Display the information Adapter to the screen
+        InformationAdapter adapter = new InformationAdapter(this, titles, content);
+>>>>>>> 04db1f0b84fae735f7d6d0de87484536649bb10f
         informationRecycler.setAdapter(adapter);
         informationRecycler.setLayoutManager(new LinearLayoutManager(this));
 
@@ -129,4 +175,37 @@ public class InformationActivity extends AppCompatActivity {
     public void finishActivity(View view) {
         finish();
     }
+
+    private void fetchDisease(String diseaseName, final Callback callback) {
+        final ArrayList<Disease> diseaseDescLoc = new ArrayList<>();
+        DocumentReference docRef = db.collection("Diseases").document(diseaseName);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                        String name = document.getData().get("name").toString();
+
+                        String description = document.getData().get("description").toString();
+
+                        Object symptoms = document.getData().get("symptom");
+                        ArrayList<String> symString = (ArrayList<String>) symptoms;
+
+                        String treatment = document.getData().get("treatment").toString();
+
+                        Disease disease = new Disease(name, description, symString, treatment);
+                        callback.onCallback(disease);
+                    } else {
+                        Log.d(TAG, "No Document by that name exists");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+
+    }
+
 }

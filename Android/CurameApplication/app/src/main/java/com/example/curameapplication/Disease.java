@@ -16,7 +16,11 @@ public class Disease {
         this.treatment = treatment;
     }
 
+<<<<<<< HEAD
     public ArrayList<ArrayList<String>> toArrayLists() {
+=======
+    public ArrayList<ArrayList<String>> convToArrayList() {
+>>>>>>> 04db1f0b84fae735f7d6d0de87484536649bb10f
         ArrayList<ArrayList<String>> diseaseInformation = new ArrayList<>();
         ArrayList<String> nameList = new ArrayList<>();
         ArrayList<String> descList = new ArrayList<>();

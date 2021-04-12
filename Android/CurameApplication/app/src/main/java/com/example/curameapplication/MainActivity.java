@@ -17,6 +17,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -131,15 +132,6 @@ public class MainActivity extends AppCompatActivity {
         File directory = getExternalFilesDir(Environment.DIRECTORY_PICTURES + "/" + dirName);
 
         File image = new File(directory, "scan.jpg");
-
-        /*
-        File image = File.createTempFile(
-                fileName,
-                ".jpg",
-                directory
-        );
-        */
-
 
         return image;
     };
@@ -336,9 +328,7 @@ public class MainActivity extends AppCompatActivity {
         //Set the lading animation to visible
         overlay.setVisibility(View.VISIBLE);
         //create a thread that will handle classifying the image
-
         Activity currentActivity = this;
-
         new Thread(new Runnable() {
             @Override
             public void run()

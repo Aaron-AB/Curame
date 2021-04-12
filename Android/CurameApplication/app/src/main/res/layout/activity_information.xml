@@ -129,7 +129,9 @@
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/informationRecycler"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:layoutAnimation="@anim/anim_recycler_in"
+                            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
                         <androidx.cardview.widget.CardView
                             android:layout_width="120dp"

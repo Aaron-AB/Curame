@@ -75,11 +75,13 @@
         android:gravity="center"
         android:text="-"
         android:textColor="#808080"
-        android:textSize="20sp" />
+        android:textSize="20sp"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/historyRecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="8dp"
+        android:layoutAnimation="@anim/anim_recycler_slide_in"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 </LinearLayout>

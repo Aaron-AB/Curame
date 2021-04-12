@@ -12,5 +12,23 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="android:windowAnimationStyle">@style/CurameActivityAnimation</item>
+    </style>
+
+    <style name="CurameActivityAnimation" parent="@android:style/Animation.Activity">
+
+        <item name="android:activityOpenEnterAnimation">
+            @anim/anim_slide_in_right
+        </item>
+        <item name="android:activityOpenExitAnimation">
+            @anim/anim_slide_out_left
+        </item>
+        <item name="android:activityCloseEnterAnimation">
+            @anim/anim_slide_in_left
+        </item>
+        <item name="android:activityCloseExitAnimation">
+            @anim/anim_slide_out_right
+        </item>
+
     </style>
 </resources>

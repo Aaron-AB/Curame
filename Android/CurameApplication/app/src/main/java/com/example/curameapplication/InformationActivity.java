@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -171,7 +173,10 @@ public class InformationActivity extends AppCompatActivity {
     }
 
     public void showFull(View view) {
+        //Animate View
         imagePreview.setVisibility(View.VISIBLE);
+
+        //Set image using picasso
         File imageFile = new File(imageUri.getPath());
         Picasso
                 .get()
@@ -182,6 +187,7 @@ public class InformationActivity extends AppCompatActivity {
     }
 
     public void hideFull(View view) {
+        //Animate View
         imagePreview.setVisibility(View.GONE);
     }
 

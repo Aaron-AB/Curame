@@ -12,6 +12,7 @@ public class Prediction implements Serializable {
     private String date;
     private Map<String, Float> predictionValueMap;
 
+    //Constructor
     public Prediction(Map<String, Float> valueMap){
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
@@ -19,10 +20,12 @@ public class Prediction implements Serializable {
         predictionValueMap = valueMap;
     }
 
+    //Returns the date the prediction was made
     public String getDate(){
         return date;
     }
 
+    //Returns the prediction made
     public Map<String, Float> getPrediction(){
         return predictionValueMap;
     }

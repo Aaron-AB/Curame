@@ -15,34 +15,47 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Map;
 
-public class DiagnosisAdapter extends RecyclerView.Adapter<DiagnosisAdapter.DiagnosisViewHolder> {
+public class PredictionAdapter extends RecyclerView.Adapter<PredictionAdapter.PredictionViewHolder> {
     private ArrayList<String> names;
     private ArrayList<Float> values;
     private Context context;
 
-    public DiagnosisAdapter(Context context, ArrayList<String> names, ArrayList<Float> values){
+    //Adapter Constructor
+    public PredictionAdapter(Context context, Prediction prediction){
+        //Get the prediction information
+        Map<String, Float> predictionData = prediction.getPrediction();
+
+        //Set the names and values of our prediction
+        ArrayList<String> names = new ArrayList<String>(predictionData.keySet());
+        ArrayList<Float> values = new ArrayList<Float>(predictionData.values());
+
         this.context = context;
         this.names = names;
         this.values = values;
     }
 
+    //Display prediction items to view holder
     @NonNull
     @Override
-    public DiagnosisViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        //Get the Diagnosis View Layout and inflate it in the provided space for the adapter
+    public PredictionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        //Get the prediction View Layout and inflate it in the provided space for the adapter
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.diagnosis_item, parent, false);
-        return new DiagnosisViewHolder(view);
-    }
+        View view = inflater.inflate(R.layout.prediction_item, parent, false);
+        return new PredictionViewHolder(view);
+    }//onCreateViewHolder
 
+    //Display information in each of the history it
     @Override
-    public void onBindViewHolder(@NonNull DiagnosisViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull PredictionViewHolder holder, int position) {
         //This binds the items provided to the variables in the adapter
         holder.itemName.setText(names.get(position));
         //Set Percentage
         DecimalFormat df = new DecimalFormat("##");
         holder.itemValue.setText(df.format(values.get(position) * 100) + "%");
+
+        //When the area is clicked, it displays the information for that item
         holder.informationArea.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,27 +64,30 @@ public class DiagnosisAdapter extends RecyclerView.Adapter<DiagnosisAdapter.Diag
                 intent.putExtra("PERCENTAGE_DATA", (Float)values.get(position));
                 //Get image data from parent activity
                 intent.putExtra("SCAN_IMAGE", (Uri)((Activity) context).getIntent().getExtras().get("SCAN_IMAGE"));
+                //Start the information activity
                 context.startActivity(intent);
             }
         });
-    }
+    }//onBindViewHolder
 
+    //This tells the recycler adapter how many items to display
     @Override
     public int getItemCount() {
         //This tells the adapter how many items its displaying
         return names.size();
-    }
+    }//getItemCount
 
-    public class DiagnosisViewHolder extends RecyclerView.ViewHolder{
+    //This defines each prediction item view
+    public class PredictionViewHolder extends RecyclerView.ViewHolder{
 
         TextView itemName, itemValue;
         LinearLayout informationArea;
 
-        public DiagnosisViewHolder(@NonNull View itemView) {
+        public PredictionViewHolder(@NonNull View itemView) {
             super(itemView);
             itemName = itemView.findViewById(R.id.itemName);
             itemValue = itemView.findViewById(R.id.itemValue);
             informationArea = itemView.findViewById(R.id.informationArea);
         }
-    }
+    }//PredictionViewHolder
 }

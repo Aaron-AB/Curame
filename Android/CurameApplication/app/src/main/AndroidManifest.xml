@@ -29,10 +29,8 @@
             android:screenOrientation="portrait" />
         <activity android:name=".InformationActivity" />
         <activity android:name=".HistoryActivity" />
-        <activity android:name=".DiagnosisSelectActivity" />
+        <activity android:name=".PredictionSelectActivity" />
         <activity android:name=".PreviewImageFromGallery" />
-        <activity android:name=".ImageSelectActivity" />
-        <activity android:name=".CameraActivity" />
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">

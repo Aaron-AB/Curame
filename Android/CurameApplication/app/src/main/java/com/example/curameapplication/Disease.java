@@ -8,6 +8,7 @@ public class Disease {
     public ArrayList<String> symptoms;
     public String treatment;
 
+    //Constructor
     public Disease(String name, String description, ArrayList symptoms, String treatment) {
         this.name = name;
         this.description = description;
@@ -15,24 +16,33 @@ public class Disease {
         this.treatment = treatment;
     }
 
+    //Convert the information of a disease to an ArrayLists of ArrayLists
     public ArrayList<ArrayList<String>> toArrayLists() {
+        //Convert the data to lists
         ArrayList<ArrayList<String>> diseaseInformation = new ArrayList<>();
-        ArrayList<String> nameList = new ArrayList<>();
         ArrayList<String> descList = new ArrayList<>();
         ArrayList<String> treatList = new ArrayList<>();
-        nameList.add(name);
         descList.add(description);
         treatList.add(treatment);
 
-        diseaseInformation.add(nameList);
+        //Add them to the list of lists
         diseaseInformation.add(descList);
         diseaseInformation.add(symptoms);
         diseaseInformation.add(treatList);
         return diseaseInformation;
-    } // [[], [], [], []]
+    }//toArrayLists
 
-    public String toString() {
-        return name + " " + description + " " + treatment;
+    //Get the headings of the information stored about the disease
+    public ArrayList<String> getHeadings(){
+        ArrayList<String> headings =  new ArrayList<>();
+        headings.add("Description");
+        headings.add("Symptoms");
+        headings.add("Treatment");
+        return headings;
     }
 
+    //Returns the name of the disease
+    public String getName() {
+        return name;
+    }//getName
 }

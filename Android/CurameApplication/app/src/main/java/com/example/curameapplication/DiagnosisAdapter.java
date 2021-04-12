@@ -41,7 +41,7 @@ public class DiagnosisAdapter extends RecyclerView.Adapter<DiagnosisAdapter.Diag
         //This binds the items provided to the variables in the adapter
         holder.itemName.setText(names.get(position));
         //Set Percentage
-        DecimalFormat df = new DecimalFormat("##.###");
+        DecimalFormat df = new DecimalFormat("##");
         holder.itemValue.setText(df.format(values.get(position) * 100) + "%");
         holder.informationArea.setOnClickListener(new View.OnClickListener() {
             @Override

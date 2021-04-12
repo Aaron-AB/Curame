@@ -74,7 +74,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         Map<String, Float> prediction = predictions.get(position).getPrediction();
         Set<String> keys = prediction.keySet();
         //Set percentage
-        DecimalFormat df = new DecimalFormat("##.###");
+        DecimalFormat df = new DecimalFormat("##");
         for(String key : keys){
             result = result + key + ": " + df.format(prediction.get(key) * 100) + "%\n";
         }

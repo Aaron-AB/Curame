@@ -124,7 +124,7 @@ public class ImageClassifier {
         outputBuffer = TensorBuffer.createFixedSize(modelOutputShape, datatype);
 
         //Dequantize the output results (converts from floating point numbers)
-        fpProbabilityConv = new TensorProcessor.Builder().add(new DequantizeOp(0, (float) (1/255.0))).build();
+        fpProbabilityConv = new TensorProcessor.Builder().add(new DequantizeOp(0, (float) (1.0))).build();
 
     }
 
@@ -153,6 +153,56 @@ public class ImageClassifier {
 
         Map<String, Float> floatMap = outputProb.getMapWithFloatValue();
 
+        //Prune any low values
+        floatMap = highestClassification(floatMap);
+
         return floatMap;
+    }
+
+    private Map<String, Float> highestClassification(Map<String, Float> floatMap){
+        String highestKey = "";
+        Float highestValue = new Float(0.0);
+
+        Map<String, Float> highestMap = new TreeMap<String, Float>();
+
+        //Get the highest values
+        for (String key : floatMap.keySet()){
+            if (floatMap.get(key) > highestValue){
+                highestKey = key;
+                highestValue = floatMap.get(key);
+            }
+        }
+
+        //Add the highest to the map
+        highestMap.put(highestKey, floatMap.remove(highestKey));
+
+        boolean found;
+        String nextKey;
+        Float nextValue;
+
+        //Now find values that are near the highest
+        do{
+            found = false;
+            nextKey = "";
+            nextValue = new Float(0.0);
+
+            //Find the next highest in the map
+            for (String key : floatMap.keySet()){
+                if (floatMap.get(key) > nextValue){
+                    nextKey = key;
+                    nextValue = floatMap.get(key);
+                }
+            }
+
+            Log.d("VALUE FOUND", Float.toString(highestValue - nextValue));
+            //if the next highest is 5% or less than the highest, add it to the map
+            if((highestValue - nextValue) <= new Float(0.05)){
+                found = true;
+                highestMap.put(nextKey, floatMap.remove(nextKey));
+            }
+        }while(found);
+
+        //return the highest map
+        return highestMap;
     }
 }

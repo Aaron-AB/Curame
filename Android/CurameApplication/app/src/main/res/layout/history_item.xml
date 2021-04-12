@@ -31,14 +31,15 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
-                android:paddingBottom="3dp">
+                android:paddingBottom="3dp"
+                android:minHeight="140dp">
 
                 <ImageView
                     android:id="@+id/trash"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_marginEnd="8dp"
-                    android:padding="2dp"
+                    android:padding="4dp"
                     android:scaleType="centerInside"
                     app:layout_constraintBottom_toBottomOf="@+id/date"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -73,7 +74,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
-                        tools:srcCompat="@tools:sample/avatars" />
+                        tools:srcCompat="@tools:sample/avatars"/>
                 </androidx.cardview.widget.CardView>
 
                 <LinearLayout

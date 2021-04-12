@@ -142,7 +142,6 @@ public class ImageClassifier {
         return preprocessor.process(image);
     }
 
-    //public List<String> Classify() {
     public Map<String, Float> Classify() {
         TensorImage tensorImage = ImagePreprocessor(imageBitmap);
 

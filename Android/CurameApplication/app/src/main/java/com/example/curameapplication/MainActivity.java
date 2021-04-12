@@ -410,4 +410,15 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), HistoryActivity.class);
         startActivity(intent);
     }
+
+    //go to about us page
+    public void goToAboutUs(View view){
+        Intent intent = new Intent(getApplicationContext(), AboutUsActivity.class);
+        startActivity(intent);
+    }
+
+    public void goToDisclaimer(View view) {
+        Intent intent = new Intent(getApplicationContext(), DisclaimerActivity.class);
+        startActivity(intent);
+    }
 }

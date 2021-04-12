@@ -1,3 +1,24 @@
 <resources>
-    <string name="app_name">Curame Application</string>
+    <string name="app_name">Curame</string>
+    <string name="About">
+        Curame is an Android application created by the Curame Team as a final year project at the University of The West Indies.\n
+        \n
+        This app demonstrates the use of Image Classification in the feild of Dermatology.\n
+        \n
+        The goal of this project was to provide insite on the potential future of the health care industry.\n
+        \n
+        Thank You.\n
+        \n
+        By:\n
+        <b>Aaron Boodoo</b>\n
+        <b>Josiah Jones</b>\n
+        <b>Tyrese Lake</b>
+    </string>
+    <string name="Disclaimer">
+        <b>Warning</b>\n
+        This application is meant for demonstration purposes only and was created as part of a project for the University of The West Indies (UWI).\n
+        This application is no where near ready for practical use, it merely gives a prediction of what a skin disease might be based on a few illnesses.\n
+        Please see a professional Dermatologist/Doctor for accurate advice.\n
+        \n
+    </string>
 </resources>

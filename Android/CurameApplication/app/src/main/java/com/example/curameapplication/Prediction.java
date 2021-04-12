@@ -1,5 +1,7 @@
 package com.example.curameapplication;
 
+import androidx.annotation.Nullable;
+
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -28,5 +30,18 @@ public class Prediction implements Serializable {
     //Returns the prediction made
     public Map<String, Float> getPrediction(){
         return predictionValueMap;
+    }
+
+    //equals method
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (!(obj instanceof Prediction)) {
+            return false;
+        }
+
+        Prediction pred = (Prediction)obj;
+
+        return((this.getDate().equals(pred.getDate())) && (this.getPrediction().equals(pred.getPrediction())));
     }
 }

@@ -51,9 +51,13 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'com.google.firebase:firebase-firestore:22.1.2'
     testImplementation 'junit:junit:4.+'
+    testImplementation 'org.junit.jupiter:junit-jupiter'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation "pl.droidsonroids.gif:android-gif-drawable:1.2.18"
     implementation 'com.android.support:multidex:2.0.1'
     implementation 'com.squareup.picasso:picasso:2.71828'
+    androidTestImplementation "org.junit.jupiter:junit-jupiter:${junitJupiterVersion}"
+    androidTestImplementation 'org.junit.jupiter:junit-jupiter'
+    androidTestImplementation 'org.junit.jupiter:junit-jupiter'
 }

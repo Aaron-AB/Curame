@@ -12,16 +12,18 @@ public class IntroActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //Play fad ein on start
         overridePendingTransition(R.anim.anim_fade_in, R.anim.anim_fade_out);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
 
+        //Display for 2 seconds
         Context context = this;
         new Handler(Looper.myLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                //Start the app after 2 seconds
+                //Start the main activity after 2 seconds
                 Intent intent = new Intent(context, MainActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.anim_fade_in, R.anim.anim_fade_out);

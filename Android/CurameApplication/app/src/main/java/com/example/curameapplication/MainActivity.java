@@ -13,17 +13,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -34,23 +31,22 @@ import java.io.ObjectOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
+    //Request codes for all activities
     private static final int REQUEST_CODE_PERMISSIONS_CAMERA = 1;
     private static final int REQUEST_CODE_CAPTURE = 2;
     private static final int REQUEST_CODE_PERMISSIONS_GALLERY = 3;
     private static final int REQUEST_CODE_IMAGE_PICK = 4;
     private static final int REQUEST_CODE_IMAGE_PREVIEW = 5;
-    private static final String PREFERENCES_NAME = "ImagePreferences";
+
+    //Tag for Log.d output
     private static final String TAG = "Debug";
 
-    private ImageButton scanButton;
-    private int count = 0;
-
     //Shared preferences
+    private static final String PREFERENCES_NAME = "ImagePreferences";
     SharedPreferences imagePref;
     SharedPreferences.Editor prefEditor;
 
@@ -59,14 +55,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        scanButton = (ImageButton)findViewById(R.id.scanButton);
-
         //Initialise Shared PreferencesEditor
         imagePref = getApplicationContext().getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE);
         prefEditor = imagePref.edit();
-        //imagePref = getApplicationContext().getSharedPreferences("ImagePreferences", MODE_PRIVATE);
+
     }//onCreate
 
+    //THis function starts the Camera Activity
     public void goToCamera(View view) {
         //If permission is not granted for Camera and/or external storage, request user to grant permission to application
         if(ContextCompat.checkSelfPermission(
@@ -77,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
                 getApplicationContext(),
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
         ) != PackageManager.PERMISSION_GRANTED) {
-
             ActivityCompat.requestPermissions(
                     MainActivity.this,
                     new String[]{
@@ -92,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }//goToCamera
 
+    //This function calls the gallery activity
     public void goToGallery(View view) {
         //If permission is not granter for Gallery and/or external storage, request user to grant permission to application
         if(ContextCompat.checkSelfPermission(
@@ -117,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }//goToGallery
 
-    //This files names and create a file for an image taken
+    //This names and creates a file for an image taken or uploaded
     private File createImageFile() throws IOException {
         //Name the directory SCAN_dd_MM_yyyy_HH_mm_ss
         String dirName = "SCAN_"
@@ -125,28 +120,29 @@ public class MainActivity extends AppCompatActivity {
                         "dd_MM_yyyy_HH_mm_ss", Locale.getDefault()
         ).format(new Date());
 
-        //Name the image IMG_dd_MM_yyyy_HH_mm_ss
-        //Name the image scan
-        String fileName = "scan";
-
+        //The directory would be in pictures
         File directory = getExternalFilesDir(Environment.DIRECTORY_PICTURES + "/" + dirName);
 
+        //Create an empty file called scan.jpg
         File image = new File(directory, "scan.jpg");
 
+        //Return the image
         return image;
-    };
+    }//createImageFile
 
     //This function calls the camera intent which starts the device camera and awaits the image
     private void callCaptureImageIntent(){
         //create an intent to start the camera activity
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
         //create an empty image file
         if(intent.resolveActivity(getPackageManager()) != null) {
+            //Create an empty image file
             File image = null;
             try {
                 image = createImageFile();
             } catch (IOException exception){
-                Toast.makeText(this, exception.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.d("FILE ERROR", exception.getMessage());
             }
 
             if (image != null) {
@@ -161,14 +157,10 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
 
                 //Save image path
-                //imagePref.edit().putString("currentImagePath", image.getAbsolutePath());
                 prefEditor.putString("currentImagePath", (String)image.getAbsolutePath());
                 prefEditor.apply();
 
-                //Log.d(TAG, "Before Activity: " + imagePref.getString("currentImagePath", "none found"));
-
                 //start the intent
-                //startActivityForResult(intent, REQUEST_CODE_CAPTURE);
                 if (intent.resolveActivity(getPackageManager()) != null) {
                     // Start the image capture intent to take photo
                     startActivityForResult(intent,  REQUEST_CODE_CAPTURE);
@@ -185,6 +177,7 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, REQUEST_CODE_IMAGE_PICK);
     }//callGalleryIntent
 
+    //This function checked the permissions before calling the camera and gallary activities
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -208,6 +201,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //This function handles all activity results for finish intents.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         //After Camera Activity Terminates
@@ -260,27 +254,19 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     //get the URI from the preview if the image is accepted
                     Uri imageUri = (Uri) data.getParcelableExtra("IMAGE_URI");
-                    //Log.d("URI", imageUri.toString());
 
                     //create a new image
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                    Bitmap bitmap =  ImageDecoder.decodeBitmap(ImageDecoder.createSource(this.getContentResolver(), imageUri));
+                    //Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
 
+                    //Create an empty file
                     File image = null;
                     image = createImageFile();
 
                     //save the image
                     FileOutputStream outStream = new FileOutputStream(image);
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 85, outStream);
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, outStream);
                     outStream.close();
-
-                    //save the date and prediction in the same location as the image
-                    //Test Data
-                    Map<String, Float> valueMap = new HashMap<String, Float>();
-                    valueMap.put("Name1", new Float(0.30));
-                    valueMap.put("Name2", new Float(0.35));
-                    valueMap.put("Name3", new Float(0.40));
-                    valueMap.put("Name4", new Float(0.45));
-                    savePredictionInfo(valueMap, image.getParent());
 
                     //Place image path in cache storage
                     prefEditor.putString("currentImagePath", (String)image.getAbsolutePath());
@@ -293,12 +279,15 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, exception.getMessage());
                 }
             }else if(resultCode == RESULT_CANCELED){//the user cancels the selected image
+                //Prompt them to select again
                 callGalleryIntent();
             }
         }
+
         super.onActivityResult(requestCode, resultCode, data);
     }//onActivityResult
 
+    //This function cleans up any empty or unneeded files
     private void deleteTempFiles(File file) {
         int file_size;
         if (file.isDirectory()) {
@@ -311,7 +300,6 @@ public class MainActivity extends AppCompatActivity {
                             f.delete();
                         }
                     } else {
-                        //file_size = Integer.parseInt(String.valueOf(f.length()/1024));
                         file_size = Integer.parseInt(String.valueOf(f.length()));
                         if(file_size == 0){
                             f.delete();
@@ -322,6 +310,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }//deleteTempFiles
 
+    //This function starts the classification
     private void startClassification(String imagePath){
         //Get the frame with the loading animation
         FrameLayout overlay = findViewById(R.id.overlayFrame);
@@ -333,7 +322,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run()
             {
-                //TEST
                 //Give the system time to display the loading animation
                 try {
                     Thread.sleep(500);
@@ -363,7 +351,7 @@ public class MainActivity extends AppCompatActivity {
                     public void run()
                     {
                         //Start the display information Activity with the prediction made
-                        Intent intent = new Intent(currentActivity, DiagnosisSelectActivity.class);
+                        Intent intent = new Intent(currentActivity, PredictionSelectActivity.class);
                         intent.putExtra("PREDICTION_DATA", prediction);
                         intent.putExtra("SCAN_IMAGE", Uri.parse(imagePath));
                         currentActivity.startActivity(intent);
@@ -373,8 +361,9 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         }).start();
-    }
+    }//startClassification
 
+    //This function saves classification information as a prediction
     private Prediction savePredictionInfo(Map<String, Float> valueMap, String directory){
         Prediction prediction = new Prediction(valueMap);
 
@@ -393,22 +382,23 @@ public class MainActivity extends AppCompatActivity {
 
         //Return the prediction
         return prediction;
-    }
+    }//savePredictionInfo
 
     //Function to go to the Scan History Screen
     public void goToHistory(View view) {
         Intent intent = new Intent(getApplicationContext(), HistoryActivity.class);
         startActivity(intent);
-    }
+    }//goToHistory
 
     //go to about us page
     public void goToAboutUs(View view){
         Intent intent = new Intent(getApplicationContext(), AboutUsActivity.class);
         startActivity(intent);
-    }
+    }//goToAboutUs
 
+    //go to disclaimer page
     public void goToDisclaimer(View view) {
         Intent intent = new Intent(getApplicationContext(), DisclaimerActivity.class);
         startActivity(intent);
-    }
+    }//goToDisclaimer
 }

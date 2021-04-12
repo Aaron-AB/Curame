@@ -58,7 +58,7 @@ public class InformationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_information);
 
-        //Find out views
+        //Find views
         mainImage = (ImageView)findViewById(R.id.mainImage);
         diseaseTitle = (TextView)findViewById(R.id.diseaseTitle);
         percentage = (TextView)findViewById(R.id.percentage);
@@ -68,9 +68,12 @@ public class InformationActivity extends AppCompatActivity {
         loadingContent = findViewById(R.id.loadingContent);
         message = findViewById(R.id.message);
 
-        imageUri = (Uri)getIntent().getExtras().get("SCAN_IMAGE");
+        //Get the name of the disease and the percentage chance
         String diseaseName = (String)getIntent().getStringExtra("NAME_DATA");
         Float diseasePercentage = (Float)getIntent().getExtras().get("PERCENTAGE_DATA");
+
+        //Get the image of the disease being displayed
+        imageUri = (Uri)getIntent().getExtras().get("SCAN_IMAGE");
 
         //Set image using picasso
         File imageFile = new File(imageUri.getPath());
@@ -103,25 +106,41 @@ public class InformationActivity extends AppCompatActivity {
         });
 
         //Fetch and display the disease information
-        fetchDisease(diseaseName);
+        fetchAndDisplayDisease(diseaseName);
     }
 
-    private void fetchDisease(String diseaseName) {
-        final ArrayList<Disease> diseaseDescLoc = new ArrayList<>();
+    //This function fetches the disease from Firebase, if the disease is found, it displays it, if not it displays a message
+    private void fetchAndDisplayDisease(String diseaseName) {
+        //This function fetches the named disease from the firebase db base
         DocumentReference docRef = db.collection("Diseases").document(diseaseName);
+
+        //Create a listener to check when the document is completed loading
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+
+            //Check if the document did not complete loading
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                //If the task is successful
                 if (task.isSuccessful()) {
+                    //get the result of the fetched document
                     DocumentSnapshot document = task.getResult();
+
+                    //if there is data
                     if (document.exists()) {
-                        //Create a disease object from the fetched information
+                        //Get the disease information from the fetched document
                         Log.d("FETCH DEBUG", "DocumentSnapshot data: " + document.getData());
+                        //Name
                         String name = document.getData().get("name").toString();
+                        //Description
                         String description = document.getData().get("description").toString();
+                        //Symptoms
                         Object symptoms = document.getData().get("symptom");
                         ArrayList<String> symString = (ArrayList<String>) symptoms;
+                        //Treatment
                         String treatment = document.getData().get("treatment").toString();
+
+                        //Create a disease object
                         Disease disease = new Disease(name, description, symString, treatment);
 
                         //Display the disease information
@@ -133,16 +152,19 @@ public class InformationActivity extends AppCompatActivity {
                         loadingContent.setVisibility(View.GONE);
                         message.setText("No information is available for this skin disease.");
                     }
-                } else {
+
+                } else {//This means the document did not complete loading
+
                     //Display error message
                     Log.d("FETCH DEBUG", "get failed with ", task.getException());
                     message.setVisibility(View.VISIBLE);
                     loadingContent.setVisibility(View.GONE);
                     message.setText("Failed to get information from server.");
+
                 }
             }
         });
-    }
+    } //fetchAndDisplayDisease
 
     //This function accepts a disease and displays it to the information recyclers
     private void displayDiseaseInformation(Disease disease) {
@@ -154,7 +176,7 @@ public class InformationActivity extends AppCompatActivity {
         InformationAdapter adapter = new InformationAdapter(this, disease, textToSpeech);
         informationRecycler.setAdapter(adapter);
         informationRecycler.setLayoutManager(new LinearLayoutManager(this));
-    }
+    }//displayDiseaseInformation
 
     public void finishActivity(View view) {
         finish();
@@ -170,10 +192,10 @@ public class InformationActivity extends AppCompatActivity {
             Log.d("TTS CLEAR", "TTS Destroyed");
         }
         super.onDestroy();
-    }
+    }//onDestroy
 
+    //This function is used to show a large version of a disease
     public void showFull(View view) {
-        //Animate View
         imagePreview.setVisibility(View.VISIBLE);
 
         //Set image using picasso
@@ -184,12 +206,12 @@ public class InformationActivity extends AppCompatActivity {
                 .fit()
                 .centerInside()
                 .into(fullImage);
-    }
+    }//showFull
 
+    //This function hides the preview
     public void hideFull(View view) {
-        //Animate View
         imagePreview.setVisibility(View.GONE);
-    }
+    }//hideFull
 
     //This function scrolls to top
     public void goToTop(View view) {
@@ -197,5 +219,5 @@ public class InformationActivity extends AppCompatActivity {
         mainScroll.post(new Runnable() {public void run() {
             mainScroll.fullScroll(View.FOCUS_UP);
         }});
-    }
+    }//goToTop
 }

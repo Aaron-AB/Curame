@@ -33,7 +33,7 @@ public class HistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
-        //test test view**
+        //Get views
         message = (TextView) findViewById(R.id.message);
 
         //Initialize Directory Lists
@@ -41,26 +41,27 @@ public class HistoryActivity extends AppCompatActivity {
         predictions = new ArrayList<Prediction>();
 
         //Load the Scan History
-        loadScanHistory();
+        History history = loadScanHistory();
 
         //Get the Recycler View;
         historyRecycler = (RecyclerView) findViewById(R.id.historyRecycler);
 
         //Render the history items
-        if(imageUris.isEmpty()){
+        if(history.getHistoryItemCount() == 0){
+            //If there are no items in history
             historyRecycler.setVisibility(View.GONE);
             message.setText("No scans have been made yet.");
         }else{
             message.setVisibility(View.GONE);
             //Initialize the adapter for the recycler
-            HistoryAdapter adapter = new HistoryAdapter(this, imageUris, predictions);
+            HistoryAdapter adapter = new HistoryAdapter(this, history);
             historyRecycler.setAdapter(adapter);
             historyRecycler.setLayoutManager(new LinearLayoutManager(this));
         }
     }
 
     //This function loads the directories for all images and prediction objects
-    private void loadScanHistory(){
+    private History loadScanHistory(){
         //This is the directory where all the images and information are stored
         File file = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File[] files;
@@ -68,6 +69,7 @@ public class HistoryActivity extends AppCompatActivity {
         File scan_file;
         Uri image_uri;
         Prediction prediction_data;
+        History history = new History();
 
         //Check if the picture directory exists
         if (file.isDirectory()) {
@@ -113,25 +115,25 @@ public class HistoryActivity extends AppCompatActivity {
                                 //Read and store the uri form the scan.jpg
                                 image_uri = Uri.parse(scan_file.toString());
 
-                                //Add the image uri and the
-                                predictions.add(prediction_data);
-                                imageUris.add(image_uri);
+                                //Add the image uri and the prediction to history
+                                history.addHistoryItem(image_uri, prediction_data);
                             } catch (IOException e) {
                                 Log.d("IOException", e.getMessage());
-                                return;
+                                return history;
                             } catch (ClassNotFoundException e) {
                                 Log.d("ClassNotFoundException", e.getMessage());
-                                return;
+                                return history;
                             }//Try Catch
                         }//If Both Files Exists
                     }//If the file is a Scan History Item Directory
                 }//For all the files in the picture directory
             }//If the picture directory contains files.
         }//If the picture directory Exists
-        return;
+        return history;
     }//loadScanHistory Function
 
+    //This functions finishes the history activity
     public void finishActivity(View view) {
         finish();
-    }
+    }//finishActivity
 }

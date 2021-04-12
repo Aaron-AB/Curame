@@ -1,46 +1,37 @@
 package com.example.curameapplication;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Map;
 
-public class DiagnosisSelectActivity extends AppCompatActivity {
+public class PredictionSelectActivity extends AppCompatActivity {
     RecyclerView diagnosisRecycler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_diagnosis_select);
+        setContentView(R.layout.activity_prediction_select);
 
         //Get data from Intent
         Prediction prediction = (Prediction)getIntent().getExtras().get("PREDICTION_DATA");
-        Map<String, Float> predictionData = prediction.getPrediction();
-
-        //Set the names and values of our prediction
-        ArrayList<String> names = new ArrayList<String>(predictionData.keySet());
-        ArrayList<Float> values = new ArrayList<Float>(predictionData.values());
 
         //Get the recycler for the view
         diagnosisRecycler = (RecyclerView)findViewById(R.id.diagnosisRecyler);
 
         //Initialize the adapter for the recycler
-        DiagnosisAdapter adapter = new DiagnosisAdapter(this, names, values);
+        PredictionAdapter adapter = new PredictionAdapter(this, prediction);
         diagnosisRecycler.setAdapter(adapter);
         diagnosisRecycler.setLayoutManager(new LinearLayoutManager(this));
     }
 
+    //Finish the activity
     public void finishActivity(View view) {
         finish();
-    }
+    }//finishActivity
 }

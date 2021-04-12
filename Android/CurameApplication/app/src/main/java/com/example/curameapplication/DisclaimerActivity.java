@@ -13,7 +13,8 @@ public class DisclaimerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_disclaimer);
     }
 
+    //This function finishes the activity
     public void finishActivity(View view){
         finish();
-    }
+    }//finishActivity
 }

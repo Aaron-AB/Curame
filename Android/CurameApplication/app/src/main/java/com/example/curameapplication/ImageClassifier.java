@@ -194,8 +194,8 @@ public class ImageClassifier {
             }
 
             Log.d("VALUE FOUND", Float.toString(highestValue - nextValue));
-            //if the next highest is 5% or less than the highest, add it to the map
-            if((highestValue - nextValue) <= new Float(0.05)){
+            //if the next highest is 10% or less than the highest, add it to the map or if the value is above 20%
+            if(((highestValue - nextValue) <= new Float(0.10)) || (nextValue>new Float(0.2))){
                 found = true;
                 highestMap.put(nextKey, floatMap.remove(nextKey));
             }

@@ -13,7 +13,8 @@ public class AboutUsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_about_us);
     }
 
+    //This function finishes the activity
     public void finishActivity(View view) {
         finish();
-    }
+    }//finishActivity
 }

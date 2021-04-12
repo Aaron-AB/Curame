@@ -6,18 +6,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
-import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
@@ -25,10 +20,8 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder> {
 
@@ -36,12 +29,14 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
     private ArrayList<Prediction> predictions;
     private Context context;
 
-    public HistoryAdapter(Context context, ArrayList<Uri> imageUris, ArrayList<Prediction> predictions){
+    //Adapter constructor
+    public HistoryAdapter(Context context, History history){
         this.context = context;
-        this.imageUris = imageUris;
-        this.predictions = predictions;
-    }
+        this.imageUris = history.getImages();
+        this.predictions = history.getPredictions();
+    }//HistoryAdapter
 
+    //Display history items to view holder
     @NonNull
     @Override
     public HistoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -49,18 +44,16 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.history_item, parent, false);
         return new HistoryAdapter.HistoryViewHolder(view);
-    }
+    }//HistoryViewHolder
 
+    //Display information in each of the history items
     @Override
     public void onBindViewHolder(@NonNull HistoryViewHolder holder, int position) {
         //Display the item date to history item
         holder.itemDate.setText("SCAN DATE: " + predictions.get(position).getDate());
-        /*
-        //Display the item image to the history item
-        holder.itemImage.setImageURI(imageUris.get(position));
-         */
-        File imageFile = new File(imageUris.get(position).getPath());
+
         //Set image using picasso
+        File imageFile = new File(imageUris.get(position).getPath());
         Picasso
                 .get()
                 .load(imageFile)
@@ -69,30 +62,34 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
                 .centerCrop()
                 .into(holder.itemImage);
 
-        String result = "";
+
         //get the predictions from the hash map
         Map<String, Float> prediction = predictions.get(position).getPrediction();
         Set<String> keys = prediction.keySet();
+
         //Set percentage
+        String result = "";
         DecimalFormat df = new DecimalFormat("##");
         for(String key : keys){
-            result = result + key + ": " + df.format(prediction.get(key) * 100) + "%\n";
+            result = result + key + ": " + df.format(prediction.get(key) * 100) + "% chance.\n";
         }
+
         //Display the result of the prediction
         holder.itemPrediction.setText(result);
 
-        //add onclick listener to view scan;
+        //add onclick listener to view scan to go to the prediction select
         holder.historyItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, DiagnosisSelectActivity.class);
+                Intent intent = new Intent(context, PredictionSelectActivity.class);
                 intent.putExtra("PREDICTION_DATA", (Prediction)predictions.get(position));
                 intent.putExtra("SCAN_IMAGE", (Uri)imageUris.get(position));
+                //Start the Prediction Select activity
                 context.startActivity(intent);
             }
         });
 
-        //add onclick listen to trash
+        //add onclick listen to trash history item
         holder.trash.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,7 +118,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
                         .setNegativeButton("No", dialogClickListener).show();
             }
         });
-    }
+    }//onBindViewHolder
 
     //This function deletes an entire file directory
     private void deleteFile(File dir){
@@ -138,13 +135,15 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
             }
         }
         dir.delete();
-    }
+    }//deleteFile
 
+    //This tells the recycler adapter how many items to display
     @Override
     public int getItemCount() {
         return imageUris.size();
-    }
+    }//getItemCount
 
+    //This defines each history item view
     public class HistoryViewHolder extends RecyclerView.ViewHolder{
 
         ImageView itemImage;
@@ -160,6 +159,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
             itemPrediction = itemView.findViewById(R.id.prediction);
             historyItem = itemView.findViewById(R.id.historyItem);
             trash = itemView.findViewById(R.id.trash);
-        }
-    }
+        }//HistoryViewHolder
+    }//HistoryViewHolder
 }

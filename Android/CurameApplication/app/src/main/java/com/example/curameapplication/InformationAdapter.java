@@ -33,7 +33,13 @@ public class InformationAdapter extends RecyclerView.Adapter<InformationAdapter.
         this.textToSpeech = tts;
     }
 
-    //Display disease information items to view holder
+
+    /**
+     * Display disease information items to view holder
+     * @param parent
+     * @param viewType
+     * @return
+     */
     @NonNull
     @Override
     public InformationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -43,7 +49,12 @@ public class InformationAdapter extends RecyclerView.Adapter<InformationAdapter.
         return new InformationAdapter.InformationViewHolder(view);
     }
 
-    //Display content in each of the information items
+
+    /**
+     * Display content in each of the information items
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(@NonNull InformationViewHolder holder, int position) {
         holder.title.setText(sectionTitle.get(position));
@@ -82,13 +93,20 @@ public class InformationAdapter extends RecyclerView.Adapter<InformationAdapter.
         });
     }
 
-    //This tells the recycler how many items it is displaying
+
+    /**
+     * This tells the recycler how many items it is displaying
+     * @return
+     */
     @Override
     public int getItemCount() {
         return sectionTitle.size();
     }
 
-    //This defines each information item view
+
+    /**
+     * This defines each information item view
+     */
     public class InformationViewHolder extends RecyclerView.ViewHolder {
 
         private TextView title;

@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class PredictionTest {
 
     @Test
-    void testGetDate() {
+    public void testGetDate() {
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         String expected_date = dateFormat.format(calendar.getTime());
@@ -27,7 +27,7 @@ class PredictionTest {
     }
 
     @Test
-    void testGetPrediction() {
+    public void testGetPrediction() {
         Map<String, Float> valueMap = new HashMap<String, Float>();
         valueMap.put("name1", new Float(10.2));
         valueMap.put("name2", new Float(21.5));
@@ -38,7 +38,7 @@ class PredictionTest {
     }
 
     @Test
-    void testEquals() {
+    public void testEquals() {
         Map<String, Float> valueMap = new HashMap<String, Float>();
         valueMap.put("name1", new Float(10.2));
         valueMap.put("name2", new Float(21.5));

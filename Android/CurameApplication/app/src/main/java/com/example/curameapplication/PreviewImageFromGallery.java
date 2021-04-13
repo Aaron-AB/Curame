@@ -46,14 +46,22 @@ public class PreviewImageFromGallery extends AppCompatActivity {
                 .into(imagePreview);
     }//onCreate
 
-    //Cancel the previewed image
+
+    /**
+     * Cancel the previewed image
+     * @param view
+     */
     public void cancelImage(View view) {
         Intent returnIntent = new Intent();
         setResult(Activity.RESULT_CANCELED, returnIntent);
         finish();
     }//cancelImage
 
-    //Accept the previewed image to be classified
+
+    /**
+     * Accept the previewed image to be classified
+     * @param view
+     */
     public void selectImage(View view) {
         Intent returnIntent = new Intent();
         returnIntent.putExtra("IMAGE_URI", imageUri);

@@ -36,7 +36,13 @@ public class PredictionAdapter extends RecyclerView.Adapter<PredictionAdapter.Pr
         this.values = values;
     }
 
-    //Display prediction items to view holder
+
+    /**
+     * Display prediction items to view holder
+     * @param parent
+     * @param viewType
+     * @return
+     */
     @NonNull
     @Override
     public PredictionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -46,7 +52,12 @@ public class PredictionAdapter extends RecyclerView.Adapter<PredictionAdapter.Pr
         return new PredictionViewHolder(view);
     }//onCreateViewHolder
 
-    //Display information in each of the history it
+
+    /**
+     * Display information in each of the history it
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(@NonNull PredictionViewHolder holder, int position) {
         //This binds the items provided to the variables in the adapter
@@ -70,14 +81,21 @@ public class PredictionAdapter extends RecyclerView.Adapter<PredictionAdapter.Pr
         });
     }//onBindViewHolder
 
-    //This tells the recycler adapter how many items to display
+
+    /**
+     * This tells the recycler adapter how many items to display
+     * @return
+     */
     @Override
     public int getItemCount() {
         //This tells the adapter how many items its displaying
         return names.size();
     }//getItemCount
 
-    //This defines each prediction item view
+
+    /**
+     * This defines each prediction item view
+     */
     public class PredictionViewHolder extends RecyclerView.ViewHolder{
 
         TextView itemName, itemValue;

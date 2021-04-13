@@ -256,8 +256,12 @@ public class MainActivity extends AppCompatActivity {
                     Uri imageUri = (Uri) data.getParcelableExtra("IMAGE_URI");
 
                     //create a new image
-                    Bitmap bitmap =  ImageDecoder.decodeBitmap(ImageDecoder.createSource(this.getContentResolver(), imageUri));
-                    //Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                    Bitmap bitmap = null;
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+                        bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(this.getContentResolver(), imageUri));
+                    } else {
+                        bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                    }
 
                     //Create an empty file
                     File image = null;

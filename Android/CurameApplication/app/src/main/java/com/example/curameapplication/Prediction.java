@@ -22,12 +22,20 @@ public class Prediction implements Serializable {
         predictionValueMap = valueMap;
     }
 
-    //Returns the date the prediction was made
+
+    /**
+     * Returns the date the prediction was made
+     * @return
+     */
     public String getDate(){
         return date;
     }
 
-    //Returns the prediction made
+
+    /**
+     * Returns the prediction made
+     * @return
+     */
     public Map<String, Float> getPrediction(){
         return predictionValueMap;
     }

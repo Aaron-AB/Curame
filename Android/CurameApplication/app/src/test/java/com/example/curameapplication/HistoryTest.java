@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class HistoryTest {
 
     @Test
-    void addHistoryItem() {
+    public void addHistoryItem() {
         History test_history = new History();
 
         Uri test_imageUri = Uri.parse("empty.png");
@@ -38,7 +38,7 @@ class HistoryTest {
     }
 
     @Test
-    void getImages() {
+    public void getImages() {
         History test_history = new History();
 
         Uri test_imageUri = Uri.parse("empty.png");
@@ -58,7 +58,7 @@ class HistoryTest {
     }
 
     @Test
-    void getPredictions() {
+    public void getPredictions() {
         History test_history = new History();
 
         Uri test_imageUri = Uri.parse("empty.png");
@@ -78,7 +78,7 @@ class HistoryTest {
     }
 
     @Test
-    void getHistoryItemCount() {
+    public void getHistoryItemCount() {
         History test_history = new History();
 
         Uri test_imageUri = Uri.parse("empty.png");

@@ -36,7 +36,9 @@ public class ImageClassifier {
 
     Bitmap imageBitmap;
 
-    //Image size needed by the model
+    /**
+     * Image size needed by the model
+     */
     private final int ySize, xSize;
 
     private Interpreter model;
@@ -75,7 +77,6 @@ public class ImageClassifier {
     public ImageClassifier(Activity activity, String imageFilePath) {
         modelPath = "model.tflite";
         labelPath = "labels.txt";
-        //"/sdcard/Download/ISIC_0024898.jpg"
         this.imageFilePath = imageFilePath;
 
         //Fetch image bitmap from URI
@@ -128,7 +129,14 @@ public class ImageClassifier {
 
     }
 
-    private TensorImage ImagePreprocessor(Bitmap imageBitmap) {
+    /**
+     * Load image into a bitmap
+     * Store bitmap in a tensor
+     * Resize tensor to match the model's input size
+     * @param imageBitmap
+     * @return
+     */
+    public TensorImage ImagePreprocessor(Bitmap imageBitmap) {
 
         //Creates new tensor image
         TensorImage image = new TensorImage(datatype);
@@ -142,6 +150,11 @@ public class ImageClassifier {
         return preprocessor.process(image);
     }
 
+    /**
+     * Runs an inference on the model,
+     * returns a Map of the highest values
+     * @return
+     */
     public Map<String, Float> Classify() {
         TensorImage tensorImage = ImagePreprocessor(imageBitmap);
 
@@ -152,13 +165,23 @@ public class ImageClassifier {
 
         Map<String, Float> floatMap = outputProb.getMapWithFloatValue();
 
-        //Prune any low values
+        /**
+         * Prune any low values
+         */
         floatMap = highestClassification(floatMap);
 
         return floatMap;
     }
 
-    private Map<String, Float> highestClassification(Map<String, Float> floatMap){
+    /**
+     * Accepts a floatMap as an input,
+     * Finds the highest value,
+     * Also finds the next highest values that are relevant,
+     * Outliers are not included
+     * @param floatMap
+     * @return
+     */
+    public Map<String, Float> highestClassification(Map<String, Float> floatMap){
         String highestKey = "";
         Float highestValue = new Float(0.0);
 

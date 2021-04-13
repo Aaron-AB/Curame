@@ -36,7 +36,13 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         this.predictions = history.getPredictions();
     }//HistoryAdapter
 
-    //Display history items to view holder
+
+    /**
+     * Display history items to view holder
+     * @param parent
+     * @param viewType
+     * @return
+     */
     @NonNull
     @Override
     public HistoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -46,7 +52,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         return new HistoryAdapter.HistoryViewHolder(view);
     }//HistoryViewHolder
 
-    //Display information in each of the history items
+
+    /**
+     * Display information in each of the history items
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(@NonNull HistoryViewHolder holder, int position) {
         //Display the item date to history item
@@ -120,7 +131,11 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         });
     }//onBindViewHolder
 
-    //This function deletes an entire file directory
+
+    /**
+     * This function deletes an entire file directory
+     * @param dir
+     */
     private void deleteFile(File dir){
         if (dir.isDirectory()) {
             File[] files = dir.listFiles();
@@ -137,7 +152,11 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         dir.delete();
     }//deleteFile
 
-    //This tells the recycler adapter how many items to display
+
+    /**
+     * This tells the recycler adapter how many items to display
+     * @return
+     */
     @Override
     public int getItemCount() {
         return imageUris.size();

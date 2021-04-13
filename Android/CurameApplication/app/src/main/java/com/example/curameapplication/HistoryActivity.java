@@ -60,7 +60,12 @@ public class HistoryActivity extends AppCompatActivity {
         }
     }
 
-    //This function loads the directories for all images and prediction objects
+    /**
+     * This function loads the directories for all images and prediction objects,
+     * Each Scan has a prediction with it,
+     * Each scan along with it's prediction is loaded with it
+     * @return
+     */
     private History loadScanHistory(){
         //This is the directory where all the images and information are stored
         File file = getExternalFilesDir(Environment.DIRECTORY_PICTURES);

@@ -1,5 +1,5 @@
 Actinic Keratoses
-Carcinoma
+Basal Cell Carcinoma
 Benign Keratosis
 Dermatofibroma
 Melanoma

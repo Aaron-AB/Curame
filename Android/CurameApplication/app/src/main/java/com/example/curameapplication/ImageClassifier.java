@@ -1,19 +1,16 @@
 package com.example.curameapplication;
 
 import android.app.Activity;
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.util.Log;
-import android.widget.ImageView;
 
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.Interpreter;
 import org.tensorflow.lite.Tensor;
 import org.tensorflow.lite.support.common.FileUtil;
 import org.tensorflow.lite.support.common.TensorProcessor;
-import org.tensorflow.lite.support.common.ops.DequantizeOp;
+import org.tensorflow.lite.support.common.ops.NormalizeOp;
 import org.tensorflow.lite.support.image.ImageProcessor;
 import org.tensorflow.lite.support.image.TensorImage;
 import org.tensorflow.lite.support.image.ops.ResizeOp;
@@ -22,7 +19,6 @@ import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 
 import java.io.IOException;
 import java.nio.MappedByteBuffer;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -55,14 +51,11 @@ public class ImageClassifier {
     //Stores labels
     private List<String> labels;
 
-    //Tensor input shape
-    int[] modelInputShape = {1, 224, 224, 3};
-
     //Tensor output shape
     int[] modelOutputShape = {1, 7}; //7 Classes
 
     //Input & Output tensor
-    private TensorImage inputBuffer;
+    //private TensorImage inputBuffer;
     private TensorBuffer outputBuffer;
 
     //Dequantize the output results
@@ -113,19 +106,15 @@ public class ImageClassifier {
             e.printStackTrace();
         }
 
-        //Grab data type for the tflite model (UINT16)
+        //Grab data type for the tflite model (FLOAT32)
         int outputIndex = 0;
         datatype = model.getOutputTensor(outputIndex).dataType();
-
-
-        //Input tensor
-        inputBuffer = new TensorImage(datatype);
 
         //Output tensor
         outputBuffer = TensorBuffer.createFixedSize(modelOutputShape, datatype);
 
         //Dequantize the output results (converts from floating point numbers)
-        fpProbabilityConv = new TensorProcessor.Builder().add(new DequantizeOp(0, (float) (1.0))).build();
+        fpProbabilityConv = new TensorProcessor.Builder().add(new NormalizeOp(0, 1.0f)).build();
 
     }
 
@@ -145,7 +134,7 @@ public class ImageClassifier {
         image.load(imageBitmap);
 
         //preprocessor function to resize the tensor
-        ImageProcessor preprocessor = new ImageProcessor.Builder().add(new ResizeOp(xSize, ySize, ResizeOp.ResizeMethod.NEAREST_NEIGHBOR)).build();
+        ImageProcessor preprocessor = new ImageProcessor.Builder().add(new ResizeOp(xSize, ySize, ResizeOp.ResizeMethod.NEAREST_NEIGHBOR)).add(new NormalizeOp(127.5f, 127.5f)).build();
 
         return preprocessor.process(image);
     }
@@ -164,7 +153,7 @@ public class ImageClassifier {
         TensorLabel outputProb = new TensorLabel(labels, fpProbabilityConv.process(outputBuffer));
 
         Map<String, Float> floatMap = outputProb.getMapWithFloatValue();
-
+        Log.d("THIS IS THE FLOATMAP", floatMap.toString());
         /**
          * Prune any low values
          */

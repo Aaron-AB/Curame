@@ -128,7 +128,7 @@
                             android:fontFamily="@font/roboto"
                             android:text="VIEW SCAN"
                             android:textColor="#38B4E7"
-                            android:textSize="14sp" />
+                            android:textSize="12sp" />
 
                         <ImageView
                             android:layout_width="16dp"

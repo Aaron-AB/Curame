@@ -14,7 +14,6 @@ import org.tensorflow.lite.Tensor;
 import org.tensorflow.lite.support.common.FileUtil;
 import org.tensorflow.lite.support.common.TensorProcessor;
 import org.tensorflow.lite.support.common.ops.DequantizeOp;
-import org.tensorflow.lite.support.common.ops.NormalizeOp;
 import org.tensorflow.lite.support.image.ImageProcessor;
 import org.tensorflow.lite.support.image.TensorImage;
 import org.tensorflow.lite.support.image.ops.ResizeOp;
@@ -114,7 +113,7 @@ public class ImageClassifier {
             e.printStackTrace();
         }
 
-        //Grab data type for the tflite model (FLOAT32)
+        //Grab data type for the tflite model (UINT16)
         int outputIndex = 0;
         datatype = model.getOutputTensor(outputIndex).dataType();
 
@@ -126,7 +125,7 @@ public class ImageClassifier {
         outputBuffer = TensorBuffer.createFixedSize(modelOutputShape, datatype);
 
         //Dequantize the output results (converts from floating point numbers)
-        fpProbabilityConv = new TensorProcessor.Builder().add(new NormalizeOp(0f, 1.0f)).build();
+        fpProbabilityConv = new TensorProcessor.Builder().add(new DequantizeOp(0, (float) (1.0))).build();
 
     }
 
@@ -146,7 +145,7 @@ public class ImageClassifier {
         image.load(imageBitmap);
 
         //preprocessor function to resize the tensor
-        ImageProcessor preprocessor = new ImageProcessor.Builder().add(new ResizeOp(xSize, ySize, ResizeOp.ResizeMethod.NEAREST_NEIGHBOR)).add(new NormalizeOp(127.5f, 127.5f)).build();
+        ImageProcessor preprocessor = new ImageProcessor.Builder().add(new ResizeOp(xSize, ySize, ResizeOp.ResizeMethod.NEAREST_NEIGHBOR)).build();
 
         return preprocessor.process(image);
     }
@@ -158,15 +157,14 @@ public class ImageClassifier {
      */
     public Map<String, Float> Classify() {
         TensorImage tensorImage = ImagePreprocessor(imageBitmap);
-        //Changed this to test
-        model.run(tensorImage.getBuffer(), outputBuffer.getBuffer().rewind());
+
+        model.run(tensorImage.getBuffer(), outputBuffer.getBuffer());
 
         Log.d("OVER HERE", "Classify: Model initialized");
         TensorLabel outputProb = new TensorLabel(labels, fpProbabilityConv.process(outputBuffer));
 
         Map<String, Float> floatMap = outputProb.getMapWithFloatValue();
 
-        Log.d("THIS IS THE FLOATMAP", floatMap.toString());
         /**
          * Prune any low values
          */

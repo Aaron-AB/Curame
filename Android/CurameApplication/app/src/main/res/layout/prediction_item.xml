@@ -93,7 +93,7 @@
                         android:fontFamily="@font/roboto"
                         android:text="VIEW INFORMATION"
                         android:textColor="@color/my_blue"
-                        android:textSize="14sp" />
+                        android:textSize="12sp" />
 
                     <ImageView
                         android:layout_width="16dp"

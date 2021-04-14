@@ -14,6 +14,7 @@ import org.tensorflow.lite.Tensor;
 import org.tensorflow.lite.support.common.FileUtil;
 import org.tensorflow.lite.support.common.TensorProcessor;
 import org.tensorflow.lite.support.common.ops.DequantizeOp;
+import org.tensorflow.lite.support.common.ops.NormalizeOp;
 import org.tensorflow.lite.support.image.ImageProcessor;
 import org.tensorflow.lite.support.image.TensorImage;
 import org.tensorflow.lite.support.image.ops.ResizeOp;
@@ -113,7 +114,7 @@ public class ImageClassifier {
             e.printStackTrace();
         }
 
-        //Grab data type for the tflite model (UINT16)
+        //Grab data type for the tflite model (FLOAT32)
         int outputIndex = 0;
         datatype = model.getOutputTensor(outputIndex).dataType();
 
@@ -145,7 +146,7 @@ public class ImageClassifier {
         image.load(imageBitmap);
 
         //preprocessor function to resize the tensor
-        ImageProcessor preprocessor = new ImageProcessor.Builder().add(new ResizeOp(xSize, ySize, ResizeOp.ResizeMethod.NEAREST_NEIGHBOR)).build();
+        ImageProcessor preprocessor = new ImageProcessor.Builder().add(new ResizeOp(xSize, ySize, ResizeOp.ResizeMethod.NEAREST_NEIGHBOR)).add(new NormalizeOp(0f, 255.0f)).build();
 
         return preprocessor.process(image);
     }
@@ -164,7 +165,7 @@ public class ImageClassifier {
         TensorLabel outputProb = new TensorLabel(labels, fpProbabilityConv.process(outputBuffer));
 
         Map<String, Float> floatMap = outputProb.getMapWithFloatValue();
-
+        Log.d("THIS IS THE FLOATMAP", floatMap.toString());
         /**
          * Prune any low values
          */

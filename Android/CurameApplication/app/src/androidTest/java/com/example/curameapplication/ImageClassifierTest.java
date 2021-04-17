@@ -1,5 +1,7 @@
 package com.example.curameapplication;
 
+import android.app.Activity;
+
 import androidx.test.rule.ActivityTestRule;
 
 import org.junit.Rule;
@@ -13,8 +15,7 @@ class ImageClassifierTest {
 
     @Test
     void classify() {
-        ActivityTestRule<MainActivity> mainActivity = new ActivityTestRule<>(MainActivity.class);
-        MainActivity activity = mainActivity.getActivity();
+        MainActivity activity = new MainActivity();
 
         String imageLocation = "vasc";  //Image of a vascular lesion
         ImageClassifier testClassifier = new ImageClassifier(activity, imageLocation);

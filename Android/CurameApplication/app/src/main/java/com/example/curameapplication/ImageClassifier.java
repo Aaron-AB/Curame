@@ -154,7 +154,7 @@ public class ImageClassifier {
 
         Map<String, Float> floatMap = outputProb.getMapWithFloatValue();
         Log.d("THIS IS THE FLOATMAP", floatMap.toString());
-        
+
         //Prune any low values
         floatMap = highestClassification(floatMap);
 
